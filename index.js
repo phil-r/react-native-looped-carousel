@@ -32,14 +32,23 @@ var Carousel = React.createClass({
       return {delay: PAGE_CHANGE_DELAY};
     },
     getInitialState: function() {
-      var childrenCount = this.props.children.length;
-      return {
-        contentOffset: {x: childrenCount > 1 ? width : 0, y: 0},
-        currentPage: childrenCount > 1 ? 1 : 0,
-      };
+      if (!!this.props.children) {
+        var childrenCount = this.props.children.length;
+        return {
+          contentOffset: {x: childrenCount > 1 ? width : 0, y: 0},
+          currentPage: childrenCount > 1 ? 1 : 0,
+          hasChildren: true,
+        };
+      } else {
+        return {
+          hasChildren: false,
+        }
+      }
     },
     componentDidMount:function(){
-      this._setUpTimer();
+      if (this.state.hasChildren) {
+        this._setUpTimer();
+      }
     },
     _onScrollBegin: function(event) {
       clearTimeout(this.timer);
@@ -81,6 +90,14 @@ var Carousel = React.createClass({
     //TODO: add optional `dots` for displaying current page (like pageControl)
     render: function() {
       var pages = [];
+
+      if (!this.state.hasChildren) {
+        return (
+          <Text style={{backgroundColor: 'white'}}>
+            You are supposed to add children inside Carousel
+          </Text>
+        );
+      }
 
       var children = this.props.children;
 
