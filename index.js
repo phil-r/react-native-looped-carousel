@@ -124,6 +124,8 @@ var Carousel = React.createClass({
       return (
         <ScrollView
           ref='scrollView'
+          contentInset={{top:0}}
+          automaticallyAdjustContentInsets={false}
           onScrollBeginDrag={this._onScrollBegin}
           onMomentumScrollEnd={this._onScrollEnd}
           alwaysBounceHorizontal={false}
