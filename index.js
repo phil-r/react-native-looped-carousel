@@ -2,8 +2,7 @@
 
 var React = require('react-native');
 var TimerMixin = require('react-timer-mixin');
-var Dimensions = require('Dimensions');
-var {width, height} = Dimensions.get('window');
+var width, height;
 
 var {
   AppRegistry,
@@ -68,6 +67,16 @@ var Carousel = React.createClass({
       this._calculateCurrentPage(offset.x);
       this.setState({contentOffset: offset});
     },
+    _onLayout: function() {
+      let self = this;
+
+      this.refs.container.measure(function(x, y, w, h, px, py) {
+        width = w;
+        height = h;
+
+        self.forceUpdate();
+      })
+    },
     _setUpTimer: function() {
       //only for cycling
       if (this.props.children.length > 1) {
@@ -89,10 +98,20 @@ var Carousel = React.createClass({
     },
     //TODO: add optional `dots` for displaying current page (like pageControl)
     render: function() {
-      var pages = [];
+      var pages = [],
+          contents,
+          containerProps;
+
+      containerProps = {
+        ref: "container",
+        onLayout: this._onLayout,
+        style: this.props.style
+      }
+
+      if (!width) return <View {...containerProps}>{contents}</View>;
 
       if (!this.state.hasChildren) {
-        return (
+        contents = (
           <Text style={{backgroundColor: 'white'}}>
             You are supposed to add children inside Carousel
           </Text>
@@ -121,7 +140,7 @@ var Carousel = React.createClass({
         return <View style={{width: width}} key={"page"+i}>{page}</View>;
       });
 
-      return (
+      contents = (
         <ScrollView
           ref='scrollView'
           onScrollBeginDrag={this._onScrollBegin}
@@ -135,12 +154,16 @@ var Carousel = React.createClass({
           contentOffset={this.state.contentOffset}
           contentContainerStyle={[
             styles.horizontalScroll,
-            this.props.style,
+            this.props.contentContainerStyle,
             {width: width*(this.props.children.length+(this.props.children.length>1?2:0))}
           ]}
         >
           {pages}
-        </ScrollView>
+        </ScrollView>);
+      return (
+        <View {...containerProps}>
+          {contents}
+        </View>
       );
     },
 });
