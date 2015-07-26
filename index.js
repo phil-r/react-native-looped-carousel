@@ -2,7 +2,6 @@
 
 var React = require('react-native');
 var TimerMixin = require('react-timer-mixin');
-var width, height;
 
 var {
   AppRegistry,
@@ -34,14 +33,16 @@ var Carousel = React.createClass({
       if (!!this.props.children) {
         var childrenCount = this.props.children.length;
         return {
-          contentOffset: {x: childrenCount > 1 ? width : 0, y: 0},
+          contentOffset: {x: 0, y: 0},
           currentPage: childrenCount > 1 ? 1 : 0,
           hasChildren: true,
+          size: { width: 0, height: 0 }
         };
       } else {
         return {
           hasChildren: false,
-        }
+          size: { width: 0, height: 0 }
+        };
       }
     },
     componentDidMount:function(){
@@ -55,13 +56,14 @@ var Carousel = React.createClass({
     _onScrollEnd: function(event) {
       this._setUpTimer();
 
-      var offset = event.nativeEvent.contentOffset;
+      var offset = Object.assign({}, event.nativeEvent.contentOffset);
 
-      var childrenCount = this.props.children.length;
-      if (offset.x == 0) {
-        offset = {x: childrenCount*width, y: 0};
-      } else if (offset.x == (childrenCount+1)*width) {
-        offset = {x: width, y: 0};
+      var childrenCount = this.props.children.length,
+          size = this.state.size;
+      if (offset.x === 0) {
+        offset.x = childrenCount * size.width;
+      } else if (offset.x == (childrenCount+1)*size.width) {
+        offset.x = size.width;
       }
 
       this._calculateCurrentPage(offset.x);
@@ -71,11 +73,11 @@ var Carousel = React.createClass({
       let self = this;
 
       this.refs.container.measure(function(x, y, w, h, px, py) {
-        width = w;
-        height = h;
-
-        self.forceUpdate();
-      })
+        self.setState({
+          contentOffset: { x: w },
+          size: { width: w, height: h}
+        });
+      });
     },
     _setUpTimer: function() {
       //only for cycling
@@ -86,14 +88,16 @@ var Carousel = React.createClass({
     },
     _animateNextPage: function() {
       var k = this.state.currentPage;
+      var size = this.state.size;
       k++;
 
       this.setState({currentPage: k});
-      this.refs.scrollView.scrollTo(0, k*width);
+      this.refs.scrollView.scrollTo(0, k*size.width);
       this._setUpTimer();
     },
     _calculateCurrentPage: function(offset) {
-      var page = Math.floor((offset - width/2) / width) + 1;
+      var size = this.state.size;
+      var page = Math.floor((offset - size.width/2) / size.width) + 1;
       this.setState({currentPage: page});
     },
     //TODO: add optional `dots` for displaying current page (like pageControl)
@@ -102,13 +106,15 @@ var Carousel = React.createClass({
           contents,
           containerProps;
 
+      var size = this.state.size;
+
       containerProps = {
         ref: "container",
         onLayout: this._onLayout,
-        style: this.props.style
-      }
+        style: [this.props.style]
+      };
 
-      if (!width) return <View {...containerProps}>{contents}</View>;
+      if (!size.width) return <View {...containerProps}>{contents}</View>;
 
       if (!this.state.hasChildren) {
         contents = (
@@ -137,7 +143,11 @@ var Carousel = React.createClass({
       }
 
       pages = pages.map((page, i) => {
-        return <View style={{width: width}} key={"page"+i}>{page}</View>;
+        return (
+          <View
+              style={[{width: size.width, height: size.height}, this.props.panelStyle]}
+              key={"page"+i}>{page}</View>
+        );
       });
 
       contents = (
@@ -151,11 +161,15 @@ var Carousel = React.createClass({
           horizontal={true}
           pagingEnabled={true}
           bounces={false}
+          automaticallyAdjustContentInsets={false}
           contentOffset={this.state.contentOffset}
           contentContainerStyle={[
             styles.horizontalScroll,
             this.props.contentContainerStyle,
-            {width: width*(this.props.children.length+(this.props.children.length>1?2:0))}
+            {
+              width: size.width*(this.props.children.length+(this.props.children.length>1?2:0)),
+              height: size.height
+            }
           ]}
         >
           {pages}
@@ -170,8 +184,7 @@ var Carousel = React.createClass({
 
 var styles = StyleSheet.create({
   horizontalScroll: {
-    height: height,
-    position:'absolute'
+    position:'absolute',
   }
 });
 
