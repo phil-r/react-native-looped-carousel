@@ -23,11 +23,13 @@ var Carousel = React.createClass({
     propTypes:{
         children: React.PropTypes.node.isRequired,
         delay: React.PropTypes.number,
-        style: View.propTypes.style
+        style: View.propTypes.style,
+        panelStyle: View.propTypes.style,
+        contentContainerStyle: View.propTypes.style
     },
     mixins: [TimerMixin],
     getDefaultProps: function() {
-      return {delay: PAGE_CHANGE_DELAY};
+      return { delay: PAGE_CHANGE_DELAY };
     },
     getInitialState: function() {
       if (!!this.props.children) {
