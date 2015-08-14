@@ -25,11 +25,15 @@ var Carousel = React.createClass({
     propTypes:{
         children: React.PropTypes.node.isRequired,
         delay: React.PropTypes.number,
-        style: View.propTypes.style
+        style: View.propTypes.style,
+        autoplay: React.PropTypes.bool
     },
     mixins: [TimerMixin],
     getDefaultProps: function() {
-      return {delay: PAGE_CHANGE_DELAY};
+      return {
+        delay: PAGE_CHANGE_DELAY,
+        autoplay: true
+      };
     },
     getInitialState: function() {
       if (!!this.props.children) {
@@ -70,8 +74,9 @@ var Carousel = React.createClass({
     },
     _setUpTimer: function() {
       //only for cycling
-      if (this.props.children.length > 1) {
-        clearTimeout(this.timer);
+      if (this.props.autoplay &&
+          this.props.children.length > 1) {
+        this.clearTimeout(this.timer);
         this.timer = this.setTimeout(this._animateNextPage, this.props.delay);
       }
     },
