@@ -1,37 +1,40 @@
 {
-    "name": "react-native-looped-carousel",
-    "version": "0.0.3",
-    "description": "Looped carousel for React Native",
-    "author": "Phil Rukin <philipp@rukin.me> (http://rukin.me)",
-    "contributors": [{
-        "name": "Sergey Pronin",
-        "email": "sergey@pronin.me"
-    }],
-    "main": "index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/appintheair/react-native-looped-carousel"
-    },
-    "bugs": {
-        "url": "https://github.com/appintheair/react-native-looped-carousel/issues"
-    },
-    "keywords": [
-        "react",
-        "native",
-        "carousel",
-        "looped"
-    ],
-    "tags": [
-        "react",
-        "native",
-        "carousel",
-        "looped"
-    ],
-    "license": "MIT",
-    "dependencies": {
-        "react-native": "^0.3.4"
-    }
+  "name": "react-native-looped-carousel",
+  "version": "0.0.4",
+  "description": "Looped carousel for React Native",
+  "author": "Phil Rukin <philipp@rukin.me> (http://rukin.me)",
+  "contributors": [{
+    "name": "Sergey Pronin",
+      "email": "sergey@pronin.me"
+  }],
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/appintheair/react-native-looped-carousel"
+  },
+  "bugs": {
+    "url": "https://github.com/appintheair/react-native-looped-carousel/issues"
+  },
+  "keywords": [
+    "react",
+    "native",
+    "carousel",
+    "looped"
+  ],
+  "tags": [
+    "react",
+    "native",
+    "carousel",
+    "looped"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "react-native": "^0.11.2",
+  },
+  "dependencies": {
+    "react-timer-mixin": "^0.13.3"
+  }
 }
