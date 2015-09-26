@@ -1,6 +1,6 @@
 # Looped carousel for React Native
 
-Based on [react-native framework](https://github.com/facebook/react-native/) (as of 0.3.4) by Facebook.
+Based on [react-native framework](https://github.com/facebook/react-native/) (as of 0.11.2) by Facebook.
 
 
 
@@ -31,7 +31,7 @@ var {
 var carouselTest = React.createClass({
   render: function() {
     return (
-      <Carousel delay={500}>
+      <Carousel delay={500} style={{width: width, height: height}}>
           <View style={{backgroundColor:'#BADA55',width:width,height:height}}/>
           <View style={{backgroundColor:'red',width:width,height:height}}/>
           <View style={{backgroundColor:'blue',width:width,height:height}}/>
