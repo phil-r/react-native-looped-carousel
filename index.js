@@ -56,6 +56,13 @@ var Carousel = React.createClass({
       this._setUpTimer();
     }
   },
+  componentWillReceiveProps: function(nextProps) {
+    if (nextProps.children.length === 1) {
+      this.setState({
+        contentOffset: { x: 0 },
+      });
+    }
+  },
   _onScrollBegin: function(event) {
     this.clearTimeout(this.timer);
   },
