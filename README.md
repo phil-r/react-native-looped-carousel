@@ -1,6 +1,6 @@
 # Looped carousel for React Native
 
-Based on [react-native framework](https://github.com/facebook/react-native/) (as of 0.11.2) by Facebook.
+Based on [react-native framework](https://github.com/facebook/react-native/) (as of 0.13.0) by Facebook.
 
 
 
