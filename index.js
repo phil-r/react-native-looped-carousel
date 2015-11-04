@@ -56,13 +56,6 @@ var Carousel = React.createClass({
       this._setUpTimer();
     }
   },
-  componentWillReceiveProps: function(nextProps) {
-    if (nextProps.children.length === 1) {
-      this.setState({
-        contentOffset: { x: 0 },
-      });
-    }
-  },
   _onScrollBegin: function(event) {
     this.clearTimeout(this.timer);
   },
@@ -138,7 +131,7 @@ var Carousel = React.createClass({
 
     //to make infinite pages structure like this is needed: 3-1-2-3-1
     //add last one at the 1st place
-    if (children.length > 1) {
+    if (children.length >= 1) {
       pages.push(children[children.length-1]);
     }
 
@@ -148,7 +141,7 @@ var Carousel = React.createClass({
     }
 
     //add first one at the last place
-    if (children.length > 1) {
+    if (children.length >= 1) {
       pages.push(children[0]);
     }
 
