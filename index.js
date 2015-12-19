@@ -4,9 +4,7 @@ var React = require('react-native');
 var TimerMixin = require('react-timer-mixin');
 
 var {
-  AppRegistry,
   StyleSheet,
-  Image,
   Text,
   ScrollView,
   View
