@@ -32,7 +32,7 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "react-native": "^0.13.0 || ^0.14.0 || ^0.15.0"
+    "react-native": ">=0.13.0 <=0.17.0"
   },
   "dependencies": {
     "react-timer-mixin": "^0.13.3"

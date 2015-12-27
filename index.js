@@ -4,9 +4,7 @@ var React = require('react-native');
 var TimerMixin = require('react-timer-mixin');
 
 var {
-  AppRegistry,
   StyleSheet,
-  Image,
   Text,
   ScrollView,
   View
@@ -26,7 +24,8 @@ var Carousel = React.createClass({
     style: View.propTypes.style,
     pageStyle: View.propTypes.style,
     contentContainerStyle: View.propTypes.style,
-    autoplay: React.PropTypes.bool
+    autoplay: React.PropTypes.bool,
+    onAnimateNextPage: React.PropTypes.func
   },
   mixins: [TimerMixin],
   getDefaultProps: function() {
@@ -96,14 +95,22 @@ var Carousel = React.createClass({
     var size = this.state.size;
     k++;
 
-    this.setState({currentPage: k});
+    this.setState({currentPage: k}, () => {
+      if (this.props.onAnimateNextPage) {
+        this.props.onAnimateNextPage(this.state.currentPage)
+      }
+    })
     this.refs.scrollView.scrollTo(0, k*size.width);
     this._setUpTimer();
   },
   _calculateCurrentPage: function(offset) {
     var size = this.state.size;
     var page = Math.floor((offset - size.width/2) / size.width) + 1;
-    this.setState({currentPage: page});
+    this.setState({currentPage: page}, () => {
+      if (this.props.onAnimateNextPage) {
+        this.props.onAnimateNextPage(this.state.currentPage)
+      }
+    });
   },
   //TODO: add optional `dots` for displaying current page (like pageControl)
   render: function() {
