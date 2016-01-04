@@ -152,10 +152,10 @@ var Carousel = React.createClass({
     }
 
     pages = pages.map((page, i) =>
-        (<View
+        <View
           style={[{width: size.width, height: size.height}, this.props.pageStyle]}
           key={"page"+i}>{page}
-        </View>);
+        </View>
     );
 
     contents = (
