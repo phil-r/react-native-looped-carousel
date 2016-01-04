@@ -1,17 +1,16 @@
 'use strict';
 
-var React = require('react-native');
-var TimerMixin = require('react-timer-mixin');
+const TimerMixin = require('react-timer-mixin');
 
-var {
+import React, {
   StyleSheet,
   Text,
   ScrollView,
   View
-} = React;
+} from 'react-native';
 
 
-var PAGE_CHANGE_DELAY = 4000;
+const PAGE_CHANGE_DELAY = 4000;
 
 /**
  * Animates pages in cycle
@@ -28,13 +27,13 @@ var Carousel = React.createClass({
     onAnimateNextPage: React.PropTypes.func
   },
   mixins: [TimerMixin],
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {
       delay: PAGE_CHANGE_DELAY,
       autoplay: true
     };
   },
-  getInitialState: function() {
+  getInitialState() {
     if (!!this.props.children) {
       var childrenCount = this.props.children.length;
       return {
@@ -50,15 +49,15 @@ var Carousel = React.createClass({
       }
     }
   },
-  componentDidMount:function(){
+  componentDidMount(){
     if (this.state.hasChildren) {
       this._setUpTimer();
     }
   },
-  _onScrollBegin: function(event) {
+  _onScrollBegin(event) {
     this.clearTimeout(this.timer);
   },
-  _onScrollEnd: function(event) {
+  _onScrollEnd(event) {
     this._setUpTimer();
 
     var offset = Object.assign({}, event.nativeEvent.contentOffset);
@@ -74,7 +73,7 @@ var Carousel = React.createClass({
     this._calculateCurrentPage(offset.x);
     this.setState({contentOffset: offset});
   },
-  _onLayout: function() {
+  _onLayout() {
     let self = this;
     this.refs.container.measure(function(x, y, w, h, px, py) {
       self.setState({
@@ -83,14 +82,14 @@ var Carousel = React.createClass({
       });
     });
   },
-  _setUpTimer: function() {
+  _setUpTimer() {
     //only for cycling
     if (this.props.autoplay && this.props.children.length > 1) {
       this.clearTimeout(this.timer);
       this.timer = this.setTimeout(this._animateNextPage, this.props.delay);
     }
   },
-  _animateNextPage: function() {
+  _animateNextPage() {
     var k = this.state.currentPage;
     var size = this.state.size;
     k++;
@@ -103,7 +102,7 @@ var Carousel = React.createClass({
     this.refs.scrollView.scrollTo(0, k*size.width);
     this._setUpTimer();
   },
-  _calculateCurrentPage: function(offset) {
+  _calculateCurrentPage(offset) {
     var size = this.state.size;
     var page = Math.floor((offset - size.width/2) / size.width) + 1;
     this.setState({currentPage: page}, () => {
@@ -113,7 +112,7 @@ var Carousel = React.createClass({
     });
   },
   //TODO: add optional `dots` for displaying current page (like pageControl)
-  render: function() {
+  render() {
     var pages = [],
       contents,
       containerProps;
@@ -152,13 +151,12 @@ var Carousel = React.createClass({
       pages.push(children[0]);
     }
 
-    pages = pages.map((page, i) => {
-      return (
-        <View
+    pages = pages.map((page, i) =>
+        (<View
           style={[{width: size.width, height: size.height}, this.props.pageStyle]}
-          key={"page"+i}>{page}</View>
-      );
-    });
+          key={"page"+i}>{page}
+        </View>);
+    );
 
     contents = (
       <ScrollView
