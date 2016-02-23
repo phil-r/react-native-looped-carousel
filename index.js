@@ -99,7 +99,7 @@ var Carousel = React.createClass({
         this.props.onAnimateNextPage(this.state.currentPage)
       }
     })
-    this.refs.scrollView.scrollTo(0, k*size.width);
+    this.refs.scrollView.scrollTo({x: k*size.width, y: 0});
     this._setUpTimer();
   },
   _calculateCurrentPage(offset) {
