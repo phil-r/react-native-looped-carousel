@@ -120,7 +120,7 @@ var Carousel = React.createClass({
   },
   _renderPageInfo(pageLength) {
     return (
-      <View style={styles.pageInfoBottomContainer}>
+      <View style={styles.pageInfoBottomContainer} pointerEvents="none">
         <View style={styles.pageInfoContainer}>
           <View style={[styles.pageInfoPill, { backgroundColor: this.props.pageInfoBackgroundColor }]}>
             <Text style={[styles.pageInfoText, this.props.pageInfoTextStyle]}>{`${this.state.currentPage}${this.props.pageInfoTextSeparator}${pageLength}`}</Text>
@@ -218,11 +218,12 @@ var styles = StyleSheet.create({
     bottom: 20,
     left: 0,
     right: 0,
+    backgroundColor: 'transparent',
   },
   pageInfoContainer: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'transparent'
   },
   pageInfoPill: {
     width: 80,
