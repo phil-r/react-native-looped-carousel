@@ -24,13 +24,20 @@ var Carousel = React.createClass({
     pageStyle: View.propTypes.style,
     contentContainerStyle: View.propTypes.style,
     autoplay: React.PropTypes.bool,
+    pageInfo: React.PropTypes.bool,
+    pageInfoBackgroundColor: React.PropTypes.string,
+    pageInfoTextStyle: Text.propTypes.style,
+    pageInfoTextSeparator: React.PropTypes.string,
     onAnimateNextPage: React.PropTypes.func
   },
   mixins: [TimerMixin],
   getDefaultProps() {
     return {
       delay: PAGE_CHANGE_DELAY,
-      autoplay: true
+      autoplay: true,
+      pageInfo: false,
+      pageInfoBackgroundColor: 'rgba(0, 0, 0, 0.25)',
+      pageInfoTextSeparator: ' / ',
     };
   },
   getInitialState() {
@@ -99,7 +106,7 @@ var Carousel = React.createClass({
         this.props.onAnimateNextPage(this.state.currentPage)
       }
     })
-    this.refs.scrollView.scrollTo(0, k*size.width);
+    this.refs.scrollView.scrollTo({ y: 0, x: k*size.width });
     this._setUpTimer();
   },
   _calculateCurrentPage(offset) {
@@ -110,6 +117,17 @@ var Carousel = React.createClass({
         this.props.onAnimateNextPage(this.state.currentPage)
       }
     });
+  },
+  _renderPageInfo(pageLength) {
+    return (
+      <View style={styles.pageInfoBottomContainer} pointerEvents="none">
+        <View style={styles.pageInfoContainer}>
+          <View style={[styles.pageInfoPill, { backgroundColor: this.props.pageInfoBackgroundColor }]}>
+            <Text style={[styles.pageInfoText, this.props.pageInfoTextStyle]}>{`${this.state.currentPage}${this.props.pageInfoTextSeparator}${pageLength}`}</Text>
+          </View>
+        </View>
+      </View>
+    );
   },
   //TODO: add optional `dots` for displaying current page (like pageControl)
   render() {
@@ -152,9 +170,8 @@ var Carousel = React.createClass({
     }
 
     pages = pages.map((page, i) =>
-        <View
-          style={[{width: size.width, height: size.height}, this.props.pageStyle]}
-          key={"page"+i}>{page}
+        <View style={[{width: size.width, height: size.height}, this.props.pageStyle]} key={"page"+i}>
+          {page}
         </View>
     );
 
@@ -186,6 +203,7 @@ var Carousel = React.createClass({
       return (
         <View {...containerProps}>
           {contents}
+          {this.props.pageInfo && this._renderPageInfo(children.length)}
         </View>
       );
   },
@@ -193,7 +211,29 @@ var Carousel = React.createClass({
 
 var styles = StyleSheet.create({
   horizontalScroll: {
-    position:'absolute'
+    position:'absolute',
+  },
+  pageInfoBottomContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 0,
+    right: 0,
+    backgroundColor: 'transparent',
+  },
+  pageInfoContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent'
+  },
+  pageInfoPill: {
+    width: 80,
+    height: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pageInfoText: {
+    textAlign: 'center',
   }
 });
 
