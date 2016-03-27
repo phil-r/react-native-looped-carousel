@@ -29,13 +29,24 @@ var {
 } = React;
 
 var carouselTest = React.createClass({
+  getInitialState: function() {
+    return {
+      size: {width: width, height: height}
+    };
+  }
+  _onLayoutDidChange: function(e) {
+    var layout = e.nativeEvent.layout;
+    this.setState({size: {width: layout.width, height: layout.height}});
+  },
   render: function() {
     return (
-      <Carousel delay={500} style={{width: width, height: height}}>
-          <View style={{backgroundColor:'#BADA55',width:width,height:height}}/>
-          <View style={{backgroundColor:'red',width:width,height:height}}/>
-          <View style={{backgroundColor:'blue',width:width,height:height}}/>
-      </Carousel>
+      <View style={{flex: 1}} onLayout={this._onLayoutDidChange}>
+        <Carousel delay={500} style={this.state.size}>
+            <View style={[{backgroundColor:'#BADA55'}, this.state.size]}/>
+            <View style={[{backgroundColor:'red'}, this.state.size]}/>
+            <View style={[{backgroundColor:'blue'}, this.state.size]}/>
+        </Carousel>
+      </View>
     );
   }
 });
