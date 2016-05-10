@@ -2,7 +2,8 @@
 
 const TimerMixin = require('react-timer-mixin');
 
-import React, {
+import React from 'react'; 
+import {
   StyleSheet,
   Text,
   ScrollView,
