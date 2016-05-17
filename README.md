@@ -33,7 +33,7 @@ var carouselTest = React.createClass({
     return {
       size: {width: width, height: height}
     };
-  }
+  },
   _onLayoutDidChange: function(e) {
     var layout = e.nativeEvent.layout;
     this.setState({size: {width: layout.width, height: layout.height}});
