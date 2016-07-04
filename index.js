@@ -2,12 +2,13 @@
 
 const TimerMixin = require('react-timer-mixin');
 
-import React from 'react'; 
+import React from 'react';
 import {
   StyleSheet,
   Text,
   ScrollView,
-  View
+  View,
+  TouchableWithoutFeedback
 } from 'react-native';
 
 
@@ -29,7 +30,8 @@ var Carousel = React.createClass({
     pageInfoBackgroundColor: React.PropTypes.string,
     pageInfoTextStyle: Text.propTypes.style,
     pageInfoTextSeparator: React.PropTypes.string,
-    onAnimateNextPage: React.PropTypes.func
+    onAnimateNextPage: React.PropTypes.func,
+    chosen: React.PropTypes.number
   },
   mixins: [TimerMixin],
   getDefaultProps() {
@@ -47,6 +49,7 @@ var Carousel = React.createClass({
       return {
         contentOffset: {x: 0, y: 0},
         currentPage: childrenCount > 1 ? 1 : 0,
+        chosen: this.props.chosen == undefined ? 0 : this.props.chosen,
         hasChildren: true,
         size: { width: 0, height: 0 }
       };
@@ -106,6 +109,14 @@ var Carousel = React.createClass({
     this.refs.scrollView.scrollTo({ y: 0, x: k*size.width });
     this._setUpTimer();
   },
+  _animateToPage(p){
+    this.clearTimeout(this.timer);
+    let size = this.state.size;
+
+    this.setState({currentPage: p});
+    this.refs.scrollView.scrollTo({y: 0, x:p*size.width});
+    this._setUpTimer();
+  },
   _calculateCurrentPage(offset) {
     var size = this.state.size;
     var page = Math.floor((offset - size.width/2) / size.width) + 1;
@@ -126,10 +137,10 @@ var Carousel = React.createClass({
       </View>
     );
   },
-  //TODO: add optional `dots` for displaying current page (like pageControl)
   render() {
     var pages = [],
       contents,
+      bullets,
       containerProps;
 
     var size = this.state.size;
@@ -149,22 +160,38 @@ var Carousel = React.createClass({
     }
 
     var children = this.props.children;
-
     //to make infinite pages structure like this is needed: 3-1-2-3-1
     //add last one at the 1st place
     if (children.length >= 1) {
-      pages.push(children[children.length-1]);
+      pages.push(children[this.props.chosen == 0 ? children.length-1 : this.props.chosen-1]);
     }
 
     //add all pages
-    for (var i=0; i<children.length; i++) {
-      pages.push(children[i]);
+    if (this.props.chosen == 0){
+      for (let i=0; i<children.length; i++) {
+        pages.push(children[i]);
+      }
+    } else {
+      for (let i = this.props.chosen; i < children.length; i++ ){
+        pages.push(children[i]);
+      }
+      for (let i = 0; i < this.props.chosen; i++) {
+        pages.push(children[i]);
+      }
     }
 
     //add first one at the last place
     if (children.length >= 1) {
-      pages.push(children[0]);
+      pages.push(children[this.props.chosen]);
     }
+
+    bullets = children.map((child, i) =>{
+      let currentPage = this.state.currentPage == children.length ? 0 : this.state.currentPage;
+      return (
+        <TouchableWithoutFeedback onPress={() => this._animateToPage(i)} key={"bullet"+i}>
+          <View style={i == currentPage ? styles.chosenBullet : styles.bullet} />
+        </TouchableWithoutFeedback>)
+    });
 
     pages = pages.map((page, i) =>
         <View style={[{width: size.width, height: size.height}, this.props.pageStyle]} key={"page"+i}>
@@ -200,6 +227,9 @@ var Carousel = React.createClass({
       return (
         <View {...containerProps}>
           {contents}
+          <View style={styles.container}>
+            {bullets}
+          </View>
           {this.props.pageInfo && this._renderPageInfo(children.length)}
         </View>
       );
@@ -231,6 +261,33 @@ var styles = StyleSheet.create({
   },
   pageInfoText: {
     textAlign: 'center',
+  },
+  container: {
+    position:'absolute',
+    left:0,
+    right:0,
+    bottom:10,
+    height:30,
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row'
+  },
+  chosenBullet: {
+    marginLeft: 20,
+    width: 10,
+    height: 10,
+    borderRadius: 20,
+    backgroundColor: 'white'
+  },
+  bullet: {
+    marginLeft: 20,
+    width: 10,
+    height: 10,
+    borderRadius: 20,
+    backgroundColor: 'transparent',
+    borderColor: 'white',
+    borderWidth: 1
   }
 });
 
