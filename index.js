@@ -1,14 +1,10 @@
-'use strict';
-
-const TimerMixin = require('react-timer-mixin');
-
-import React from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
   ScrollView,
   View,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
 } from 'react-native';
 
 
@@ -18,8 +14,8 @@ const PAGE_CHANGE_DELAY = 4000;
  * Animates pages in cycle
  * (loop possible if children count > 1)
 */
-var Carousel = React.createClass({
-  propTypes:{
+export default class Carousel extends Component {
+  static propTypes = {
     children: React.PropTypes.node.isRequired,
     delay: React.PropTypes.number,
     style: View.propTypes.style,
@@ -31,214 +27,255 @@ var Carousel = React.createClass({
     pageInfoTextStyle: Text.propTypes.style,
     pageInfoTextSeparator: React.PropTypes.string,
     onAnimateNextPage: React.PropTypes.func,
-    chosen: React.PropTypes.number
-  },
-  mixins: [TimerMixin],
-  getDefaultProps() {
-    return {
-      delay: PAGE_CHANGE_DELAY,
-      autoplay: true,
-      pageInfo: false,
-      pageInfoBackgroundColor: 'rgba(0, 0, 0, 0.25)',
-      pageInfoTextSeparator: ' / ',
-    };
-  },
-  getInitialState() {
-    if (!!this.props.children) {
-      var childrenCount = this.props.children.length;
-      return {
-        contentOffset: {x: 0, y: 0},
-        currentPage: childrenCount > 1 ? 1 : 0,
-        chosen: this.props.chosen == undefined ? 0 : this.props.chosen,
-        hasChildren: true,
-        size: { width: 0, height: 0 }
+    currentPage: React.PropTypes.number,
+    bullets: React.PropTypes.bool,
+  };
+
+  static defaultProps = {
+    delay: PAGE_CHANGE_DELAY,
+    autoplay: true,
+    pageInfo: false,
+    pageInfoBackgroundColor: 'rgba(0, 0, 0, 0.25)',
+    pageInfoTextSeparator: ' / ',
+    currentPage: 0,
+  };
+
+  constructor(props) {
+    super(props);
+    const size = { width: 0, height: 0 };
+    if (props.children) {
+      const childrenLength = props.children.length ? props.children.length : 1;
+      this.state = {
+        currentPage: props.currentPage,
+        size,
+        childrenLength,
       };
     } else {
-      return {
-        hasChildren: false,
-        size: { width: 0, height: 0 }
-      }
+      this.state = { size };
     }
-  },
-  componentDidMount(){
-    if (this.state.hasChildren) {
+  }
+
+  componentDidMount() {
+    if (this.state.childrenLength) {
       this._setUpTimer();
     }
-  },
-  _onScrollBegin(event) {
-    this.clearTimeout(this.timer);
-  },
-  _onScrollEnd(event) {
-    this._setUpTimer();
+  }
 
-    var offset = Object.assign({}, event.nativeEvent.contentOffset);
+  componentWillUnmount() {
+    this._clearTimer();
+  }
 
-    var childrenCount = this.props.children.length,
-      size = this.state.size;
-    if (offset.x === 0) {
-      offset.x = childrenCount * size.width;
-    } else if (offset.x == (childrenCount+1)*size.width) {
-      offset.x = size.width;
+  componentWillReceiveProps(nextProps) {
+    let childrenLength = 0;
+    if (nextProps.children) {
+      childrenLength = nextProps.children.length ? nextProps.children.length : 1;
     }
+    this.setState({ childrenLength });
+  }
 
-    this._calculateCurrentPage(offset.x);
-    this.setState({contentOffset: offset});
-  },
-  _onLayout() {
-    let self = this;
-    this.refs.container.measure(function(x, y, w, h, px, py) {
-      self.setState({
-        contentOffset: { x: w },
-        size: { width: w, height: h}
-      });
-    });
-  },
-  _setUpTimer() {
-    //only for cycling
-    if (this.props.autoplay && this.props.children.length > 1) {
-      this.clearTimeout(this.timer);
-      this.timer = this.setTimeout(this._animateNextPage, this.props.delay);
-    }
-  },
-  _animateNextPage() {
-    var k = this.state.currentPage;
-    var size = this.state.size;
-    k++;
+  _onScrollBegin = () => {
+    this._clearTimer();
+  }
 
-    this.setState({currentPage: k});
-    this.refs.scrollView.scrollTo({ y: 0, x: k*size.width });
-    this._setUpTimer();
-  },
-  _animateToPage(p){
-    this.clearTimeout(this.timer);
-    let size = this.state.size;
-
-    this.setState({currentPage: p});
-    this.refs.scrollView.scrollTo({y: 0, x:p*size.width});
-    this._setUpTimer();
-  },
-  _calculateCurrentPage(offset) {
-    var size = this.state.size;
-    var page = Math.floor((offset - size.width/2) / size.width) + 1;
-    this.setState({currentPage: page}, () => {
+  _setCurrentPage = (currentPage) => {
+    this.setState({ currentPage }, () => {
       if (this.props.onAnimateNextPage) {
-        this.props.onAnimateNextPage(this.state.currentPage)
+        // FIXME: called twice on ios with auto-scroll
+        this.props.onAnimateNextPage(currentPage);
       }
     });
-  },
-  _renderPageInfo(pageLength) {
-    return (
-      <View style={styles.pageInfoBottomContainer} pointerEvents="none">
-        <View style={styles.pageInfoContainer}>
-          <View style={[styles.pageInfoPill, { backgroundColor: this.props.pageInfoBackgroundColor }]}>
-            <Text style={[styles.pageInfoText, this.props.pageInfoTextStyle]}>{`${this.state.currentPage}${this.props.pageInfoTextSeparator}${pageLength}`}</Text>
-          </View>
+  }
+
+  _onScrollEnd = (event) => {
+    const offset = { ...event.nativeEvent.contentOffset };
+    const page = this._calculateCurrentPage(offset.x);
+    this._placeCritical(page);
+    this._setCurrentPage(page);
+    this._setUpTimer();
+  }
+
+  _onLayout = () => {
+    this.container.measure((x, y, w, h) => {
+      this.setState({
+        size: { width: w, height: h },
+      });
+      this._placeCritical(this.state.currentPage);
+    });
+  }
+
+  _clearTimer = () => {
+    clearTimeout(this.timer);
+  }
+
+  _setUpTimer = () => {
+    // only for cycling
+    if (this.props.autoplay && this.props.children.length > 1) {
+      this._clearTimer();
+      this.timer = setTimeout(this._animateNextPage, this.props.delay);
+    }
+  }
+
+  _scrollTo = (offset, animated) => {
+    this.scrollView.scrollTo({ y: 0, x: offset, animated });
+  }
+
+  _animateNextPage = () => {
+    const { currentPage } = this.state;
+    this._animateToPage(this._normalizePageNumber(currentPage + 1));
+  }
+
+  _animateToPage = (page) => {
+    let currentPage = page;
+    this._clearTimer();
+    const { width } = this.state.size;
+    const { childrenLength } = this.state;
+    if (currentPage >= childrenLength) {
+      currentPage = 0;
+    }
+    if (currentPage === 0) {
+      this._scrollTo((childrenLength - 1) * width, false);
+      this._scrollTo(childrenLength * width, true);
+    } else if (currentPage === 1) {
+      this._scrollTo(0, false);
+      this._scrollTo(width, true);
+    } else {
+      this._scrollTo(currentPage * width, true);
+    }
+    this._setCurrentPage(currentPage);
+    this._setUpTimer();
+  }
+
+  _placeCritical = (page) => {
+    const { childrenLength } = this.state;
+    const { width } = this.state.size;
+    if (page === 0) {
+      this._scrollTo(childrenLength * width, false);
+    } else if (page === 1) {
+      this._scrollTo(width, false);
+    }
+  }
+
+  _normalizePageNumber = (page) => {
+    const { childrenLength } = this.state;
+    if (page === childrenLength) {
+      return 0;
+    } else if (page >= childrenLength) {
+      return 1;
+    }
+    return page;
+  }
+
+  _calculateCurrentPage = (offset) => {
+    const { width } = this.state.size;
+    const page = Math.floor(offset / width);
+    return this._normalizePageNumber(page);
+  }
+
+  _renderPageInfo = (pageLength) =>
+    <View style={styles.pageInfoBottomContainer} pointerEvents="none">
+      <View style={styles.pageInfoContainer}>
+        <View
+          style={[styles.pageInfoPill, { backgroundColor: this.props.pageInfoBackgroundColor }]}
+        >
+          <Text
+            style={[styles.pageInfoText, this.props.pageInfoTextStyle]}
+          >
+            {`${this.state.currentPage + 1}${this.props.pageInfoTextSeparator}${pageLength}`}
+          </Text>
         </View>
       </View>
+    </View>
+
+  _renderBullets = (pageLength) => {
+    const bullets = [];
+    for (let i = 0; i < pageLength; i += 1) {
+      bullets.push(
+        <TouchableWithoutFeedback onPress={() => this._animateToPage(i)} key={`bullet${i}`}>
+          <View style={i === this.state.currentPage ? styles.chosenBullet : styles.bullet} />
+        </TouchableWithoutFeedback>);
+    }
+    return (
+      <View style={styles.bullets}>
+        {bullets}
+      </View>
     );
-  },
+  }
+
+
   render() {
-    var pages = [],
-      contents,
-      bullets,
-      containerProps;
+    const { size } = this.state;
+    const children = this.props.children;
+    let pages = [];
 
-    var size = this.state.size;
-
-    containerProps = {
-      ref: 'container',
-      onLayout: this._onLayout,
-      style: [this.props.style]
-    };
-
-    if (!this.state.hasChildren) {
-      contents = (
-        <Text style={{backgroundColor: 'white'}}>
+    if (children && children.length > 1) {
+      // add all pages
+      for (let i = 0; i < children.length; i += 1) {
+        pages.push(children[i]);
+      }
+      // We want to make infinite pages structure like this: 1-2-3-1-2
+      // so we add first and second page again to the end
+      pages.push(children[0]);
+      pages.push(children[1]);
+    } else if (children) {
+      pages.push(children);
+    } else {
+      return (
+        <Text style={{ backgroundColor: 'white' }}>
           You are supposed to add children inside Carousel
         </Text>
       );
     }
 
-    var children = this.props.children;
-    //to make infinite pages structure like this is needed: 3-1-2-3-1
-    //add last one at the 1st place
-    if (children.length >= 1) {
-      pages.push(children[this.props.chosen == 0 ? children.length-1 : this.props.chosen-1]);
-    }
-
-    //add all pages
-    if (this.props.chosen == 0){
-      for (let i=0; i<children.length; i++) {
-        pages.push(children[i]);
-      }
-    } else {
-      for (let i = this.props.chosen; i < children.length; i++ ){
-        pages.push(children[i]);
-      }
-      for (let i = 0; i < this.props.chosen; i++) {
-        pages.push(children[i]);
-      }
-    }
-
-    //add first one at the last place
-    if (children.length >= 1) {
-      pages.push(children[this.props.chosen]);
-    }
-
-    bullets = children.map((child, i) =>{
-      let currentPage = this.state.currentPage == children.length ? 0 : this.state.currentPage;
-      return (
-        <TouchableWithoutFeedback onPress={() => this._animateToPage(i)} key={"bullet"+i}>
-          <View style={i == currentPage ? styles.chosenBullet : styles.bullet} />
-        </TouchableWithoutFeedback>)
-    });
-
     pages = pages.map((page, i) =>
-        <View style={[{width: size.width, height: size.height}, this.props.pageStyle]} key={"page"+i}>
-          {page}
-        </View>
+      <View style={[{ ...size }, this.props.pageStyle]} key={`page${i}`}>
+        {page}
+      </View>
     );
 
-    contents = (
+    const containerProps = {
+      ref: (c) => { this.container = c; },
+      onLayout: this._onLayout,
+      style: [this.props.style],
+    };
+
+    const contents = (
       <ScrollView
-        ref='scrollView'
+        ref={(c) => { this.scrollView = c; }}
         onScrollBeginDrag={this._onScrollBegin}
         onMomentumScrollEnd={this._onScrollEnd}
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}
-        contentInset={{top:0}}
+        contentInset={{ top: 0 }}
         automaticallyAdjustContentInsets={false}
         showsHorizontalScrollIndicator={false}
-        horizontal={true}
-        pagingEnabled={true}
+        horizontal
+        pagingEnabled
         bounces={false}
-        contentOffset={this.state.contentOffset}
         contentContainerStyle={[
           styles.horizontalScroll,
           this.props.contentContainerStyle,
           {
-            width: size.width*(this.props.children.length+(this.props.children.length>1?2:0)),
-            height: size.height
-          }
+            width: size.width * (children.length + (children.length > 1 ? 2 : 0)),
+            height: size.height,
+          },
         ]}
       >
         {pages}
       </ScrollView>);
-      return (
-        <View {...containerProps}>
-          {contents}
-          <View style={styles.container}>
-            {bullets}
-          </View>
-          {this.props.pageInfo && this._renderPageInfo(children.length)}
-        </View>
-      );
-  },
-});
 
-var styles = StyleSheet.create({
+    return (
+      <View {...containerProps}>
+        {contents}
+        {this.props.bullets && this._renderBullets(this.state.childrenLength)}
+        {this.props.pageInfo && this._renderPageInfo(this.state.childrenLength)}
+      </View>
+      );
+  }
+}
+
+const styles = StyleSheet.create({
   horizontalScroll: {
-    position:'absolute',
+    position: 'absolute',
   },
   pageInfoBottomContainer: {
     position: 'absolute',
@@ -250,7 +287,7 @@ var styles = StyleSheet.create({
   pageInfoContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
   pageInfoPill: {
     width: 80,
@@ -262,33 +299,31 @@ var styles = StyleSheet.create({
   pageInfoText: {
     textAlign: 'center',
   },
-  container: {
-    position:'absolute',
-    left:0,
-    right:0,
-    bottom:10,
-    height:30,
+  bullets: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 10,
+    height: 30,
     backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   chosenBullet: {
-    marginLeft: 20,
+    margin: 10,
     width: 10,
     height: 10,
     borderRadius: 20,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   bullet: {
-    marginLeft: 20,
+    margin: 10,
     width: 10,
     height: 10,
     borderRadius: 20,
     backgroundColor: 'transparent',
     borderColor: 'white',
-    borderWidth: 1
-  }
+    borderWidth: 1,
+  },
 });
-
-module.exports = Carousel;
