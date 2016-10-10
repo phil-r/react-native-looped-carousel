@@ -17,24 +17,25 @@ const PAGE_CHANGE_DELAY = 4000;
 export default class Carousel extends Component {
   static propTypes = {
     children: React.PropTypes.node.isRequired,
+    autoplay: React.PropTypes.bool,
     delay: React.PropTypes.number,
+    currentPage: React.PropTypes.number,
     style: View.propTypes.style,
     pageStyle: View.propTypes.style,
     contentContainerStyle: View.propTypes.style,
-    autoplay: React.PropTypes.bool,
     pageInfo: React.PropTypes.bool,
     pageInfoBackgroundColor: React.PropTypes.string,
     pageInfoTextStyle: Text.propTypes.style,
     pageInfoTextSeparator: React.PropTypes.string,
-    onAnimateNextPage: React.PropTypes.func,
-    currentPage: React.PropTypes.number,
     bullets: React.PropTypes.bool,
+    onAnimateNextPage: React.PropTypes.func,
   };
 
   static defaultProps = {
     delay: PAGE_CHANGE_DELAY,
     autoplay: true,
     pageInfo: false,
+    bullets: false,
     pageInfoBackgroundColor: 'rgba(0, 0, 0, 0.25)',
     pageInfoTextSeparator: ' / ',
     currentPage: 0,
