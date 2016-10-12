@@ -1,8 +1,12 @@
 # Looped carousel for React Native
+[![NPM version](http://img.shields.io/npm/v/react-native-looped-carousel.svg?style=flat)](https://www.npmjs.com/package/react-native-looped-carousel)
+[![Build Status](https://travis-ci.org/appintheair/react-native-looped-carousel.svg)](https://travis-ci.org/appintheair/react-native-looped-carousel)
+[![Dependency Status](https://david-dm.org/appintheair/react-native-looped-carousel.svg)](https://david-dm.org/appintheair/react-native-looped-carousel)
+[![devDependency Status](https://david-dm.org/appintheair/react-native-looped-carousel/dev-status.svg)](https://david-dm.org/appintheair/react-native-looped-carousel#info=devDependencies)
+
+Full-fledged "infinite" carousel for your next [react-native](https://github.com/facebook/react-native/) project. Supports iOS and Android.
 
 Based on [react-native framework](https://github.com/facebook/react-native/) by Facebook.
-
-
 
 ## Demo
 ![](http://spronin.github.io/img/react.gif)
@@ -10,52 +14,79 @@ Based on [react-native framework](https://github.com/facebook/react-native/) by 
 ## Install
 
 ```sh
-$ npm install react-native-looped-carousel --save
+npm install react-native-looped-carousel --save
 ```
+
+## Props
+
+Name | propType | default value | description
+--- | --- | --- | ---
+autoplay | boolean | true | enables auto animations
+delay | number | 4000 | number in milliseconds between auto animations
+currentPage | number | 0 | allows you to set initial page
+pageStyle | style | null | style for pages
+contentContainerStyle | style | null | `contentContainerStyle` for the scrollView
+pageInfo | boolean | false | shows `{currentPage} / {totalNumberOfPages}` pill at the bottom
+pageInfoBackgroundColor | string | 'rgba(0, 0, 0, 0.25)' | background color for pageInfo
+pageInfoTextStyle | style | null | style for text in pageInfo
+pageInfoTextSeparator | string | ' / ' | separator for `{currentPage}` and `{totalNumberOfPages}`
+bullets | bool | false | wether to show "bullets" at the bottom of the carousel
+onAnimateNextPage | func | null | callback that is called with 0-based Id of the current page
 
 ## Usage
 ```js
-'use strict';
-
-var React = require('react-native');
-var Carousel = require('react-native-looped-carousel');
-var Dimensions = require('Dimensions');
-var {width, height} = Dimensions.get('window');
-var {
-  AppRegistry,
-  StyleSheet,
+import React, { Component } from 'react';
+import {
   Text,
-  View
-} = React;
+  View,
+  Dimensions,
+} from 'react-native';
+import Carousel from 'react-native-looped-carousel';
 
-var carouselTest = React.createClass({
-  getInitialState: function() {
-    return {
-      size: {width: width, height: height}
+const { width, height } = Dimensions.get('window');
+
+export default class CarouselExample extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      size: { width, height },
     };
-  },
-  _onLayoutDidChange: function(e) {
-    var layout = e.nativeEvent.layout;
-    this.setState({size: {width: layout.width, height: layout.height}});
-  },
-  render: function() {
+  }
+
+  _onLayoutDidChange = (e) => {
+    const layout = e.nativeEvent.layout;
+    this.setState({ size: { width: layout.width, height: layout.height } });
+  }
+
+  render() {
     return (
-      <View style={{flex: 1}} onLayout={this._onLayoutDidChange}>
-        <Carousel delay={500} style={this.state.size}>
-            <View style={[{backgroundColor:'#BADA55'}, this.state.size]}/>
-            <View style={[{backgroundColor:'red'}, this.state.size]}/>
-            <View style={[{backgroundColor:'blue'}, this.state.size]}/>
+      <View style={{ flex: 1 }} onLayout={this._onLayoutDidChange}>
+        <Carousel
+          delay={2000}
+          style={this.state.size}
+          autoplay
+          pageInfo
+          onAnimateNextPage={(p) => console.log(p)}
+        >
+          <View style={[{ backgroundColor: '#BADA55' }, this.state.size]}><Text>1</Text></View>
+          <View style={[{ backgroundColor: 'red' }, this.state.size]}><Text>2</Text></View>
+          <View style={[{ backgroundColor: 'blue' }, this.state.size]}><Text>3</Text></View>
         </Carousel>
       </View>
     );
   }
-});
-
-AppRegistry.registerComponent('carouselTest', () => carouselTest);
+}
 ```
+
+[Full example code](Examples/Simple)
 
 ## Used in
  - [React Native Buyscreen](https://github.com/appintheair/react-native-buyscreen)
+
+## See also
+ - [React Native Grid Component](https://github.com/phil-r/react-native-grid-component)
 
 ----
 
