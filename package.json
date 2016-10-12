@@ -10,7 +10,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint index.js --fix"
+    "lint": "eslint index.js"
   },
   "repository": {
     "type": "git",

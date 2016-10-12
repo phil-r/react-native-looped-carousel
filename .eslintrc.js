@@ -24,6 +24,8 @@ module.exports = {
     "no-underscore-dangle": 0,
     "arrow-parens": 0,
     "no-use-before-define": 0,
+    "import/extensions": 0,
+    "import/no-unresolved": 0,
     "react/sort-comp": 0,
     "react/jsx-filename-extension": 0,
   }
