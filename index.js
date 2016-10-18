@@ -149,7 +149,9 @@ export default class Carousel extends Component {
   _placeCritical = (page) => {
     const { childrenLength } = this.state;
     const { width } = this.state.size;
-    if (page === 0) {
+    if (childrenLength === 1) {
+      this._scrollTo(0, false);
+    } else if (page === 0) {
       this._scrollTo(childrenLength * width, false);
     } else if (page === 1) {
       this._scrollTo(width, false);
