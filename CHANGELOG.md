@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3
+
+- Fixed issue with `currentPage` property not working properly
+
 ## 0.1.2
 
 - Fixed issue when single children wasn't displayed properly

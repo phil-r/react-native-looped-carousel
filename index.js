@@ -155,6 +155,8 @@ export default class Carousel extends Component {
       this._scrollTo(childrenLength * width, false);
     } else if (page === 1) {
       this._scrollTo(width, false);
+    } else {
+      this._scrollTo(page * width, false);
     }
   }
 

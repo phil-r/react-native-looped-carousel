@@ -31,6 +31,7 @@ export default class CarouselExample extends Component {
           style={this.state.size}
           autoplay
           pageInfo
+          currentPage={2}
           onAnimateNextPage={(p) => console.log(p)}
         >
           <View style={[{ backgroundColor: '#BADA55' }, this.state.size]}><Text>1</Text></View>
