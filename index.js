@@ -28,6 +28,9 @@ export default class Carousel extends Component {
     pageInfoTextStyle: Text.propTypes.style,
     pageInfoTextSeparator: React.PropTypes.string,
     bullets: React.PropTypes.bool,
+    bulletsContainerStyle: Text.propTypes.style,
+    bulletStyle: Text.propTypes.style,
+    chosenBulletStyle: Text.propTypes.style,
     onAnimateNextPage: React.PropTypes.func,
   };
 
@@ -196,12 +199,15 @@ export default class Carousel extends Component {
     for (let i = 0; i < pageLength; i += 1) {
       bullets.push(
         <TouchableWithoutFeedback onPress={() => this._animateToPage(i)} key={`bullet${i}`}>
-          <View style={i === this.state.currentPage ? styles.chosenBullet : styles.bullet} />
+          <View style={i === this.state.currentPage ?
+            [styles.chosenBullet, this.props.chosenBulletStyle] : [styles.bullet, this.props.bulletStyle]} />
         </TouchableWithoutFeedback>);
     }
     return (
       <View style={styles.bullets}>
-        {bullets}
+        <View style={[styles.bulletsContainer, this.props.bulletsContainerStyle]}>
+          {bullets}
+        </View>
       </View>
     );
   }
@@ -311,6 +317,11 @@ const styles = StyleSheet.create({
     bottom: 10,
     height: 30,
     backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  bulletsContainer: {
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
