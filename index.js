@@ -283,7 +283,7 @@ export default class Carousel extends Component {
         {this.props.bullets && this._renderBullets(this.state.childrenLength)}
         {this.props.pageInfo && this._renderPageInfo(this.state.childrenLength)}
       </View>
-      );
+    );
   }
 }
 
