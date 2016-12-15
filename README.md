@@ -24,6 +24,7 @@ Name | propType | default value | description
 autoplay | boolean | true | enables auto animations
 delay | number | 4000 | number in milliseconds between auto animations
 currentPage | number | 0 | allows you to set initial page
+style | style | null | style for the carousel
 pageStyle | style | null | style for pages
 contentContainerStyle | style | null | `contentContainerStyle` for the scrollView
 pageInfo | boolean | false | shows `{currentPage} / {totalNumberOfPages}` pill at the bottom
@@ -31,6 +32,9 @@ pageInfoBackgroundColor | string | 'rgba(0, 0, 0, 0.25)' | background color for 
 pageInfoTextStyle | style | null | style for text in pageInfo
 pageInfoTextSeparator | string | ' / ' | separator for `{currentPage}` and `{totalNumberOfPages}`
 bullets | bool | false | wether to show "bullets" at the bottom of the carousel
+bulletsContainerStyle | style | [See styles](https://github.com/appintheair/react-native-looped-carousel/blob/master/index.js#L327-L331) | style for the bullets container
+bulletStyle | style | [See styles](https://github.com/appintheair/react-native-looped-carousel/blob/master/index.js#L339-L347) | style for the unselected bullets
+chosenBulletStyle | style | [See styles](https://github.com/appintheair/react-native-looped-carousel/blob/master/index.js#L332-L338) | style for the selected bullets
 onAnimateNextPage | func | null | callback that is called with 0-based Id of the current page
 
 ## Usage
