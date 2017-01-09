@@ -244,9 +244,9 @@ export default class Carousel extends Component {
     }
 
     pages = pages.map((page, i) =>
-      <View style={[{ ...size }, this.props.pageStyle]} key={`page${i}`}>
+      <TouchableWithoutFeedback style={[{ ...size }, this.props.pageStyle]} key={`page${i}`}>
         {page}
-      </View>
+      </TouchableWithoutFeedback>
     );
 
     const containerProps = {
