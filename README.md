@@ -31,6 +31,9 @@ pageInfoBackgroundColor | string | 'rgba(0, 0, 0, 0.25)' | background color for 
 pageInfoTextStyle | style | null | style for text in pageInfo
 pageInfoTextSeparator | string | ' / ' | separator for `{currentPage}` and `{totalNumberOfPages}`
 bullets | bool | false | wether to show "bullets" at the bottom of the carousel
+bulletStyle | style | null | style for each bullet
+bulletsContainerStyle | style | null | style for the bullets container
+chosenBulletStyle | stlye | null | style for the selected bullet
 onAnimateNextPage | func | null | callback that is called with 0-based Id of the current page
 
 ## Usage
