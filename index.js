@@ -49,6 +49,18 @@ export default class Carousel extends Component {
     pageInfoBackgroundColor: 'rgba(0, 0, 0, 0.25)',
     pageInfoTextSeparator: ' / ',
     currentPage: 0,
+    style: undefined,
+    pageStyle: undefined,
+    contentContainerStyle: undefined,
+    pageInfoTextStyle: undefined,
+    bulletsContainerStyle: undefined,
+    chosenBulletStyle: undefined,
+    bulletStyle: undefined,
+    arrowsContainerStyle: undefined,
+    arrowstyle: undefined,
+    leftArrowText: '',
+    rightArrowText: '',
+    onAnimateNextPage: undefined,
   };
 
   constructor(props) {
@@ -225,10 +237,11 @@ export default class Carousel extends Component {
     );
   }
 
-  _renderArrows = (pageLength) => {
-    let { currentPage,childrenLength } = this.state;
+  _renderArrows = () => {
+    let { currentPage } = this.state;
+    const { childrenLength } = this.state;
     if (currentPage < 1) {
-        currentPage = childrenLength;
+      currentPage = childrenLength;
     }
     return (
       <View style={styles.arrows}>
@@ -309,7 +322,7 @@ export default class Carousel extends Component {
         {this.props.bullets && this._renderBullets(this.state.childrenLength)}
         {this.props.pageInfo && this._renderPageInfo(this.state.childrenLength)}
       </View>
-      );
+    );
   }
 }
 
@@ -355,14 +368,14 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    top:0,
-    backgroundColor: 'transparent'
+    top: 0,
+    backgroundColor: 'transparent',
   },
   arrowsContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   bulletsContainer: {
     alignItems: 'center',
