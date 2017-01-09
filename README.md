@@ -24,18 +24,25 @@ Name | propType | default value | description
 autoplay | boolean | true | enables auto animations
 delay | number | 4000 | number in milliseconds between auto animations
 currentPage | number | 0 | allows you to set initial page
-style | style | null | style for the carousel
 pageStyle | style | null | style for pages
 contentContainerStyle | style | null | `contentContainerStyle` for the scrollView
+onAnimateNextPage | func | null | callback that is called with 0-based Id of the current page
+|
 pageInfo | boolean | false | shows `{currentPage} / {totalNumberOfPages}` pill at the bottom
 pageInfoBackgroundColor | string | 'rgba(0, 0, 0, 0.25)' | background color for pageInfo
 pageInfoTextStyle | style | null | style for text in pageInfo
 pageInfoTextSeparator | string | ' / ' | separator for `{currentPage}` and `{totalNumberOfPages}`
+|
 bullets | bool | false | wether to show "bullets" at the bottom of the carousel
 bulletStyle | style | null | style for each bullet
 bulletsContainerStyle | style | null | style for the bullets container
 chosenBulletStyle | stlye | null | style for the selected bullet
-onAnimateNextPage | func | null | callback that is called with 0-based Id of the current page
+|
+bullets | bool | false | wether to show "bullets" at the bottom of the carousel
+bulletStyle | style | null | style for each bullet
+bulletsContainerStyle | style | null | style for the bullets container
+leftArrowText | string | 'Left' | label for left arrow
+rightArrowText | string | 'Right' | label for right arrow
 
 ## Usage
 ```js
