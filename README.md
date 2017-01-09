@@ -38,11 +38,11 @@ bulletStyle | style | null | style for each bullet
 bulletsContainerStyle | style | null | style for the bullets container
 chosenBulletStyle | stlye | null | style for the selected bullet
 |
-bullets | bool | false | wether to show "bullets" at the bottom of the carousel
-bulletStyle | style | null | style for each bullet
-bulletsContainerStyle | style | null | style for the bullets container
-leftArrowText | string | 'Left' | label for left arrow
-rightArrowText | string | 'Right' | label for right arrow
+arrows | bool | false | wether to show navigation arrows for the carousel
+arrowsStyle | style | null | style for navigation arrows
+arrowsContainerStyle | style | null | style for the navigation arrows container
+leftArrowText | string | 'Left' | label for left navigation arrow
+rightArrowText | string | 'Right' | label for right navigation arrow
 
 ## Usage
 ```js
