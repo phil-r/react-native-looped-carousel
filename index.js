@@ -3,6 +3,7 @@ import {
   StyleSheet,
   Text,
   ScrollView,
+  TouchableOpacity,
   View,
   TouchableWithoutFeedback,
 } from 'react-native';
@@ -30,6 +31,11 @@ export default class Carousel extends Component {
     bullets: React.PropTypes.bool,
     bulletsContainerStyle: Text.propTypes.style,
     bulletStyle: Text.propTypes.style,
+    arrows: React.PropTypes.bool,
+    arrowsContainerStyle: Text.propTypes.style,
+    arrowstyle: Text.propTypes.style,
+    leftArrowText: React.PropTypes.string,
+    rightArrowText: React.PropTypes.string,
     chosenBulletStyle: Text.propTypes.style,
     onAnimateNextPage: React.PropTypes.func,
   };
@@ -39,6 +45,7 @@ export default class Carousel extends Component {
     autoplay: true,
     pageInfo: false,
     bullets: false,
+    arrows: false,
     pageInfoBackgroundColor: 'rgba(0, 0, 0, 0.25)',
     pageInfoTextSeparator: ' / ',
     currentPage: 0,
@@ -218,6 +225,21 @@ export default class Carousel extends Component {
     );
   }
 
+  _renderArrows = (pageLength) => {
+    let { currentPage,childrenLength } = this.state;
+    if (currentPage < 1) {
+        currentPage = childrenLength;
+    }
+    return (
+      <View style={styles.arrows}>
+        <View style={[styles.arrowsContainer, this.props.arrowsContainerStyle]}>
+          <TouchableOpacity onPress={() => this._animateToPage(this._normalizePageNumber(currentPage - 1))} style={this.props.arrowstyle}><Text>{this.props.leftArrowText ? this.props.leftArrowText : 'Left'}</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => this._animateToPage(this._normalizePageNumber(currentPage + 1))} style={this.props.arrowstyle}><Text>{this.props.rightArrowText ? this.props.rightArrowText : 'Right'}</Text></TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+
 
   render() {
     const { size } = this.state;
@@ -283,10 +305,11 @@ export default class Carousel extends Component {
     return (
       <View {...containerProps}>
         {contents}
+        {this.props.arrows && this._renderArrows(this.state.childrenLength)}
         {this.props.bullets && this._renderBullets(this.state.childrenLength)}
         {this.props.pageInfo && this._renderPageInfo(this.state.childrenLength)}
       </View>
-    );
+      );
   }
 }
 
@@ -326,6 +349,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
+  },
+  arrows: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    top:0,
+    backgroundColor: 'transparent'
+  },
+  arrowsContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
   bulletsContainer: {
     alignItems: 'center',
