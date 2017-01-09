@@ -75,6 +75,7 @@ export default class Carousel extends Component {
       childrenLength = nextProps.children.length ? nextProps.children.length : 1;
     }
     this.setState({ childrenLength });
+    this._setUpTimer();
   }
 
   _onScrollBegin = () => {

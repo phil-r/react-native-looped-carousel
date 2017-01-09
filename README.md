@@ -24,6 +24,7 @@ Name | propType | default value | description
 autoplay | boolean | true | enables auto animations
 delay | number | 4000 | number in milliseconds between auto animations
 currentPage | number | 0 | allows you to set initial page
+style | style | null | style for the carousel
 pageStyle | style | null | style for pages
 contentContainerStyle | style | null | `contentContainerStyle` for the scrollView
 pageInfo | boolean | false | shows `{currentPage} / {totalNumberOfPages}` pill at the bottom
