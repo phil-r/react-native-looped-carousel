@@ -28,5 +28,6 @@ module.exports = {
     "import/no-unresolved": 0,
     "react/sort-comp": 0,
     "react/jsx-filename-extension": 0,
+    "react/no-array-index-key": 0,
   }
 };

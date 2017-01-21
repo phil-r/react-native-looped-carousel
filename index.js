@@ -278,11 +278,11 @@ export default class Carousel extends Component {
       );
     }
 
-    pages = pages.map((page, i) =>
+    pages = pages.map((page, i) => (
       <TouchableWithoutFeedback style={[{ ...size }, this.props.pageStyle]} key={`page${i}`}>
         {page}
       </TouchableWithoutFeedback>
-    );
+    ));
 
     const containerProps = {
       ref: (c) => { this.container = c; },

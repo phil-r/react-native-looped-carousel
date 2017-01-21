@@ -15,6 +15,9 @@ Pods/
 
 lto-llvm.*
 
-#node specific
+# node specific
 node_modules
 npm-debug.log
+
+# Allow yarn.lock file
+!yarn.lock
