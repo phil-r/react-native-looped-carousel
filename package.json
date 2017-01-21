@@ -1,12 +1,14 @@
 {
   "name": "react-native-looped-carousel",
-  "version": "0.1.4",
+  "version": "0.1.5-0",
   "description": "Looped carousel for React Native",
   "author": "Phil Rukin <philipp@rukin.me> (http://rukin.me)",
-  "contributors": [{
-    "name": "Sergey Pronin",
-    "email": "sergey@pronin.me"
-  }],
+  "contributors": [
+    {
+      "name": "Sergey Pronin",
+      "email": "sergey@pronin.me"
+    }
+  ],
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -33,8 +35,8 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "react-native": ">=0.25.0",
-    "react": ">=15.3.1"
+    "react": ">=15.3.1",
+    "react-native": ">=0.25.0"
   },
   "devDependencies": {
     "babel-eslint": "^7.0.0",
