@@ -27,6 +27,7 @@ export default class Carousel extends Component {
     pageInfo: React.PropTypes.bool,
     pageInfoBackgroundColor: React.PropTypes.string,
     pageInfoTextStyle: Text.propTypes.style,
+    pageInfoBottomContainerStyle: View.propTypes.style,
     pageInfoTextSeparator: React.PropTypes.string,
     bullets: React.PropTypes.bool,
     bulletsContainerStyle: Text.propTypes.style,
@@ -53,6 +54,7 @@ export default class Carousel extends Component {
     pageStyle: undefined,
     contentContainerStyle: undefined,
     pageInfoTextStyle: undefined,
+    pageInfoBottomContainerStyle:  undefined,
     bulletsContainerStyle: undefined,
     chosenBulletStyle: undefined,
     bulletStyle: undefined,
@@ -202,7 +204,7 @@ export default class Carousel extends Component {
   }
 
   _renderPageInfo = (pageLength) =>
-    <View style={styles.pageInfoBottomContainer} pointerEvents="none">
+    <View style={[styles.pageInfoBottomContainer,  this.props.pageInfoBottomContainerStyle]} pointerEvents="none">
       <View style={styles.pageInfoContainer}>
         <View
           style={[styles.pageInfoPill, { backgroundColor: this.props.pageInfoBackgroundColor }]}
