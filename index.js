@@ -54,7 +54,7 @@ export default class Carousel extends Component {
     pageStyle: undefined,
     contentContainerStyle: undefined,
     pageInfoTextStyle: undefined,
-    pageInfoBottomContainerStyle:  undefined,
+    pageInfoBottomContainerStyle: undefined,
     bulletsContainerStyle: undefined,
     chosenBulletStyle: undefined,
     bulletStyle: undefined,
@@ -204,7 +204,7 @@ export default class Carousel extends Component {
   }
 
   _renderPageInfo = (pageLength) =>
-    <View style={[styles.pageInfoBottomContainer,  this.props.pageInfoBottomContainerStyle]} pointerEvents="none">
+    <View style={[styles.pageInfoBottomContainer, this.props.pageInfoBottomContainerStyle]} pointerEvents="none">
       <View style={styles.pageInfoContainer}>
         <View
           style={[styles.pageInfoPill, { backgroundColor: this.props.pageInfoBackgroundColor }]}
