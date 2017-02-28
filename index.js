@@ -274,7 +274,7 @@ export default class Carousel extends Component {
       // so we add first and second page again to the end
       pages.push(children[0]);
       pages.push(children[1]);
-    } else if (children.length === 1) {
+    } else if (children && children.length === 1) {
       pages.push(children[0]);
     } else if (children) {
       pages.push(children);
