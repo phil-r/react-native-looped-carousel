@@ -33,16 +33,18 @@ pageInfoBackgroundColor | string | 'rgba(0, 0, 0, 0.25)' | background color for 
 pageInfoTextStyle | style | null | style for text in pageInfo
 pageInfoTextSeparator | string | ' / ' | separator for `{currentPage}` and `{totalNumberOfPages}`
 |
-bullets | bool | false | wether to show "bullets" at the bottom of the carousel
+bullets | bool | false | whether to show "bullets" at the bottom of the carousel
 bulletStyle | style | null | style for each bullet
 bulletsContainerStyle | style | null | style for the bullets container
 chosenBulletStyle | stlye | null | style for the selected bullet
 |
-arrows | bool | false | wether to show navigation arrows for the carousel
+arrows | bool | false | whether to show navigation arrows for the carousel
 arrowsStyle | style | null | style for navigation arrows
 arrowsContainerStyle | style | null | style for the navigation arrows container
 leftArrowText | string / element | 'Left' | label / icon for left navigation arrow
 rightArrowText | string / element | 'Right' | label / icon for right navigation arrow
+animateTo | number | 0 | slide carousel to this page, needs to be activated with `refreshAnimation`
+refreshAnimation | number | 0 | carousel slides to `animateTo` page every time this value changes to a new non-zero number
 
 ## Usage
 ```js
