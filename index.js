@@ -44,6 +44,8 @@ export default class Carousel extends Component {
     ]),
     chosenBulletStyle: Text.propTypes.style,
     onAnimateNextPage: React.PropTypes.func,
+    animateTo: React.PropTypes.number,
+    refreshAnimation: React.PropTypes.number,
   };
 
   static defaultProps = {
@@ -67,6 +69,8 @@ export default class Carousel extends Component {
     leftArrowText: '',
     rightArrowText: '',
     onAnimateNextPage: undefined,
+    animateTo: 0,
+    refreshAnimation: 0,
   };
 
   constructor(props) {
@@ -101,6 +105,11 @@ export default class Carousel extends Component {
     }
     this.setState({ childrenLength });
     this._setUpTimer();
+    if (nextProps.refreshAnimation && nextProps.refreshAnimation !== 0 && this.state.refreshAnimation !== nextProps.refreshAnimation) {
+      this.setState({refreshAnimation: nextProps.refreshAnimation})
+      this.setState({currentPage: nextProps.animateTo});
+      this._animateToPage(nextProps.animateTo);
+    }
   }
 
   _onScrollBegin = () => {
