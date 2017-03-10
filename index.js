@@ -105,7 +105,8 @@ export default class Carousel extends Component {
     }
     this.setState({ childrenLength });
     this._setUpTimer();
-    if (nextProps.refreshAnimation !== 0) {
+    if (nextProps.refreshAnimation && nextProps.refreshAnimation !== 0 && this.state.refreshAnimation !== nextProps.refreshAnimation) {
+      this.setState({refreshAnimation: nextProps.refreshAnimation})
       this.setState({currentPage: nextProps.animateTo});
       this._animateToPage(nextProps.animateTo);
     }
