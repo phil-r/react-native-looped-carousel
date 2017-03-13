@@ -27,6 +27,7 @@ currentPage | number | 0 | allows you to set initial page
 pageStyle | style | null | style for pages
 contentContainerStyle | style | null | `contentContainerStyle` for the scrollView
 onAnimateNextPage | func | null | callback that is called with 0-based Id of the current page
+swipe | bool | true | motion control for Swipe
 |
 pageInfo | boolean | false | shows `{currentPage} / {totalNumberOfPages}` pill at the bottom
 pageInfoBackgroundColor | string | 'rgba(0, 0, 0, 0.25)' | background color for pageInfo
