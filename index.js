@@ -30,15 +30,16 @@ export default class Carousel extends Component {
     pageInfoTextSeparator: React.PropTypes.string,
     bullets: React.PropTypes.bool,
     bulletsContainerStyle: Text.propTypes.style,
+    bulletsContainerPosition: Text.propTypes.style,
     bulletStyle: Text.propTypes.style,
     arrows: React.PropTypes.bool,
     arrowsContainerStyle: Text.propTypes.style,
     arrowstyle: Text.propTypes.style,
-    leftArrowText: React.propTypes.oneOfType([
+    leftArrowText: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.element,
     ]),
-    rightArrowText: React.propTypes.oneOfType([
+    rightArrowText: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.element,
     ]),
@@ -60,6 +61,7 @@ export default class Carousel extends Component {
     contentContainerStyle: undefined,
     pageInfoTextStyle: undefined,
     bulletsContainerStyle: undefined,
+    bulletsContainerPosition: undefined,
     chosenBulletStyle: undefined,
     bulletStyle: undefined,
     arrowsContainerStyle: undefined,
@@ -223,20 +225,26 @@ export default class Carousel extends Component {
     </View>
 
   _renderBullets = (pageLength) => {
+    const {
+      bulletsContainerPosition,
+      bulletsContainerStyle,
+      chosenBulletStyle,
+      bulletStyle,
+    } = this.props;
     const bullets = [];
     for (let i = 0; i < pageLength; i += 1) {
       bullets.push(
         <TouchableWithoutFeedback onPress={() => this._animateToPage(i)} key={`bullet${i}`}>
           <View
             style={i === this.state.currentPage ?
-              [styles.chosenBullet, this.props.chosenBulletStyle] :
-              [styles.bullet, this.props.bulletStyle]}
+              [styles.chosenBullet, chosenBulletStyle] :
+              [styles.bullet, bulletStyle]}
           />
         </TouchableWithoutFeedback>);
     }
     return (
-      <View style={styles.bullets}>
-        <View style={[styles.bulletsContainer, this.props.bulletsContainerStyle]}>
+      <View style={[styles.bullets, bulletsContainerPosition]}>
+        <View style={[styles.bulletsContainer, bulletsContainerStyle]}>
           {bullets}
         </View>
       </View>
