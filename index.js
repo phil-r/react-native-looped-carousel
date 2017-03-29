@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,39 +11,43 @@ import {
 
 const PAGE_CHANGE_DELAY = 4000;
 
+const { node, bool, number, string, oneOfType, element, func } = PropTypes;
+const { style } = View.propTypes;
+
 /**
  * Animates pages in cycle
  * (loop possible if children count > 1)
 */
 export default class Carousel extends Component {
   static propTypes = {
-    children: React.PropTypes.node.isRequired,
-    autoplay: React.PropTypes.bool,
-    delay: React.PropTypes.number,
-    currentPage: React.PropTypes.number,
-    style: View.propTypes.style,
-    pageStyle: View.propTypes.style,
-    contentContainerStyle: View.propTypes.style,
-    pageInfo: React.PropTypes.bool,
-    pageInfoBackgroundColor: React.PropTypes.string,
-    pageInfoTextStyle: Text.propTypes.style,
-    pageInfoTextSeparator: React.PropTypes.string,
-    bullets: React.PropTypes.bool,
-    bulletsContainerStyle: Text.propTypes.style,
-    bulletStyle: Text.propTypes.style,
-    arrows: React.PropTypes.bool,
-    arrowsContainerStyle: Text.propTypes.style,
-    arrowstyle: Text.propTypes.style,
-    leftArrowText: React.propTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.element,
+    children: node.isRequired,
+    autoplay: bool,
+    delay: number,
+    currentPage: number,
+    style,
+    pageStyle: style,
+    contentContainerStyle: style,
+    pageInfo: bool,
+    pageInfoBackgroundColor: string,
+    pageInfoTextStyle: style,
+    pageInfoTextSeparator: string,
+    bullets: bool,
+    bulletsStyle: style,
+    bulletsContainerStyle: style,
+    bulletStyle: style,
+    arrows: bool,
+    arrowsContainerStyle: style,
+    arrowstyle: style,
+    leftArrowText: oneOfType([
+      string,
+      element,
     ]),
-    rightArrowText: React.propTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.element,
+    rightArrowText: oneOfType([
+      string,
+      element,
     ]),
-    chosenBulletStyle: Text.propTypes.style,
-    onAnimateNextPage: React.PropTypes.func,
+    chosenBulletStyle: style,
+    onAnimateNextPage: func,
   };
 
   static defaultProps = {
@@ -62,6 +66,7 @@ export default class Carousel extends Component {
     bulletsContainerStyle: undefined,
     chosenBulletStyle: undefined,
     bulletStyle: undefined,
+    bulletsStyle: undefined,
     arrowsContainerStyle: undefined,
     arrowstyle: undefined,
     leftArrowText: '',
@@ -235,7 +240,7 @@ export default class Carousel extends Component {
         </TouchableWithoutFeedback>);
     }
     return (
-      <View style={styles.bullets}>
+      <View style={[styles.bullets, this.props.bulletsStyle]}>
         <View style={[styles.bulletsContainer, this.props.bulletsContainerStyle]}>
           {bullets}
         </View>
