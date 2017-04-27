@@ -103,6 +103,10 @@ export default class Carousel extends Component {
     this._setUpTimer();
   }
 
+  getCurrentPage() {
+    return this.state.currentPage;
+  }
+
   _onScrollBegin = () => {
     this._clearTimer();
   }
