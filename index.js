@@ -34,11 +34,11 @@ export default class Carousel extends Component {
     arrows: React.PropTypes.bool,
     arrowsContainerStyle: Text.propTypes.style,
     arrowstyle: Text.propTypes.style,
-    leftArrowText: React.propTypes.oneOfType([
+    leftArrowText: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.element,
     ]),
-    rightArrowText: React.propTypes.oneOfType([
+    rightArrowText: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.element,
     ]),
