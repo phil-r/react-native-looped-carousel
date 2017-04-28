@@ -153,10 +153,10 @@ export default class Carousel extends Component {
 
   _animateNextPage = () => {
     const { currentPage } = this.state;
-    this._animateToPage(this._normalizePageNumber(currentPage + 1));
+    this.animateToPage(this._normalizePageNumber(currentPage + 1));
   }
 
-  _animateToPage = (page) => {
+  animateToPage = (page) => {
     let currentPage = page;
     this._clearTimer();
     const { width } = this.state.size;
@@ -226,7 +226,7 @@ export default class Carousel extends Component {
     const bullets = [];
     for (let i = 0; i < pageLength; i += 1) {
       bullets.push(
-        <TouchableWithoutFeedback onPress={() => this._animateToPage(i)} key={`bullet${i}`}>
+        <TouchableWithoutFeedback onPress={() => this.animateToPage(i)} key={`bullet${i}`}>
           <View
             style={i === this.state.currentPage ?
               [styles.chosenBullet, this.props.chosenBulletStyle] :
@@ -252,8 +252,8 @@ export default class Carousel extends Component {
     return (
       <View style={styles.arrows}>
         <View style={[styles.arrowsContainer, this.props.arrowsContainerStyle]}>
-          <TouchableOpacity onPress={() => this._animateToPage(this._normalizePageNumber(currentPage - 1))} style={this.props.arrowstyle}><Text>{this.props.leftArrowText ? this.props.leftArrowText : 'Left'}</Text></TouchableOpacity>
-          <TouchableOpacity onPress={() => this._animateToPage(this._normalizePageNumber(currentPage + 1))} style={this.props.arrowstyle}><Text>{this.props.rightArrowText ? this.props.rightArrowText : 'Right'}</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => this.animateToPage(this._normalizePageNumber(currentPage - 1))} style={this.props.arrowstyle}><Text>{this.props.leftArrowText ? this.props.leftArrowText : 'Left'}</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => this.animateToPage(this._normalizePageNumber(currentPage + 1))} style={this.props.arrowstyle}><Text>{this.props.rightArrowText ? this.props.rightArrowText : 'Right'}</Text></TouchableOpacity>
         </View>
       </View>
     );
