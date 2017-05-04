@@ -133,7 +133,8 @@ export default class Carousel extends Component {
       this.setState({
         size: { width: w, height: h },
       });
-      this._placeCritical(this.state.currentPage);
+      // remove setTimeout wrapper when https://github.com/facebook/react-native/issues/6849 is resolved.
+      setTimeout(() => this._placeCritical(this.state.currentPage), 0);
     });
   }
 
