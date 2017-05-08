@@ -27,17 +27,17 @@ currentPage | number | 0 | allows you to set initial page
 pageStyle | style | null | style for pages
 contentContainerStyle | style | null | `contentContainerStyle` for the scrollView
 onAnimateNextPage | func | null | callback that is called with 0-based Id of the current page
-|
+**Pagination** | --- | --- | ---
 pageInfo | boolean | false | shows `{currentPage} / {totalNumberOfPages}` pill at the bottom
 pageInfoBackgroundColor | string | 'rgba(0, 0, 0, 0.25)' | background color for pageInfo
 pageInfoTextStyle | style | null | style for text in pageInfo
 pageInfoTextSeparator | string | ' / ' | separator for `{currentPage}` and `{totalNumberOfPages}`
-|
+**Bullets** | --- | --- | ---
 bullets | bool | false | wether to show "bullets" at the bottom of the carousel
 bulletStyle | style | null | style for each bullet
 bulletsContainerStyle | style | null | style for the bullets container
 chosenBulletStyle | stlye | null | style for the selected bullet
-|
+**Arrows** | --- | --- | ---
 arrows | bool | false | wether to show navigation arrows for the carousel
 arrowsStyle | style | null | style for navigation arrows
 arrowsContainerStyle | style | null | style for the navigation arrows container
