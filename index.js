@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  Platform,
   StyleSheet,
   Text,
   ScrollView,
@@ -34,11 +35,11 @@ export default class Carousel extends Component {
     arrows: React.PropTypes.bool,
     arrowsContainerStyle: Text.propTypes.style,
     arrowstyle: Text.propTypes.style,
-    leftArrowText: React.propTypes.oneOfType([
+    leftArrowText: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.element,
     ]),
-    rightArrowText: React.propTypes.oneOfType([
+    rightArrowText: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.element,
     ]),
@@ -73,11 +74,12 @@ export default class Carousel extends Component {
     super(props);
     const size = { width: 0, height: 0 };
     if (props.children) {
-      const childrenLength = props.children.length ? props.children.length : 1;
+      const childrenLength = React.Children.count(props.children) || 1;
       this.state = {
         currentPage: props.currentPage,
         size,
         childrenLength,
+        contents: null,
       };
     } else {
       this.state = { size };
@@ -88,6 +90,8 @@ export default class Carousel extends Component {
     if (this.state.childrenLength) {
       this._setUpTimer();
     }
+    // Set up pages but not content. Content will be set up via onLayout event.
+    this._setUpPages();
   }
 
   componentWillUnmount() {
@@ -95,12 +99,52 @@ export default class Carousel extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let childrenLength = 0;
-    if (nextProps.children) {
-      childrenLength = nextProps.children.length ? nextProps.children.length : 1;
+    if (this.props.children !== nextProps.children) {
+      let childrenLength = 0;
+      if (nextProps.children) {
+        const length = React.Children.count(nextProps.children);
+        childrenLength = length || 1;
+      }
+      this.setState({ childrenLength, contents: null }, () => {
+        this._setUpPages().then(this._setContents());
+      });
+      this._setUpTimer();
     }
-    this.setState({ childrenLength });
-    this._setUpTimer();
+  }
+
+  _setUpPages() {
+    return new Promise(resolve => {
+      const { size } = this.state;
+      const children = React.Children.toArray(this.props.children);
+      const pages = [];
+
+      if (children && children.length > 1) {
+        // add all pages
+        for (let i = 0; i < children.length; i += 1) {
+          pages.push(children[i]);
+        }
+        // We want to make infinite pages structure like this: 1-2-3-1-2
+        // so we add first and second page again to the end
+        pages.push(children[0]);
+        pages.push(children[1]);
+      } else if (children) {
+        pages.push(children[0]);
+      } else {
+        pages.push(<View><Text>
+            You are supposed to add children inside Carousel
+        </Text></View>);
+      }
+      this.pages = pages.map((page, i) => (
+        <TouchableWithoutFeedback style={[{ ...size }, this.props.pageStyle]} key={`page${i}`}>
+          {page}
+        </TouchableWithoutFeedback>
+      ));
+      resolve();
+    });
+  }
+
+  getCurrentPage() {
+    return this.state.currentPage;
   }
 
   _onScrollBegin = () => {
@@ -140,7 +184,7 @@ export default class Carousel extends Component {
 
   _setUpTimer = () => {
     // only for cycling
-    if (this.props.autoplay && this.props.children.length > 1) {
+    if (this.props.autoplay && React.Children.count(this.props.children) > 1) {
       this._clearTimer();
       this.timer = setTimeout(this._animateNextPage, this.props.delay);
     }
@@ -149,15 +193,20 @@ export default class Carousel extends Component {
   _scrollTo = (offset, animated) => {
     if (this.scrollView) {
       this.scrollView.scrollTo({ y: 0, x: offset, animated });
+
+      // Fix bug #50
+      if (Platform.OS === 'android' && !animated) {
+        this.scrollView.scrollTo({ y: 0, x: offset, animated: true });
+      }
     }
   }
 
   _animateNextPage = () => {
     const { currentPage } = this.state;
-    this._animateToPage(this._normalizePageNumber(currentPage + 1));
+    this.animateToPage(this._normalizePageNumber(currentPage + 1));
   }
 
-  _animateToPage = (page) => {
+  animateToPage = (page) => {
     let currentPage = page;
     this._clearTimer();
     const { width } = this.state.size;
@@ -227,7 +276,7 @@ export default class Carousel extends Component {
     const bullets = [];
     for (let i = 0; i < pageLength; i += 1) {
       bullets.push(
-        <TouchableWithoutFeedback onPress={() => this._animateToPage(i)} key={`bullet${i}`}>
+        <TouchableWithoutFeedback onPress={() => this.animateToPage(i)} key={`bullet${i}`}>
           <View
             style={i === this.state.currentPage ?
               [styles.chosenBullet, this.props.chosenBulletStyle] :
@@ -253,76 +302,56 @@ export default class Carousel extends Component {
     return (
       <View style={styles.arrows}>
         <View style={[styles.arrowsContainer, this.props.arrowsContainerStyle]}>
-          <TouchableOpacity onPress={() => this._animateToPage(this._normalizePageNumber(currentPage - 1))} style={this.props.arrowstyle}><Text>{this.props.leftArrowText ? this.props.leftArrowText : 'Left'}</Text></TouchableOpacity>
-          <TouchableOpacity onPress={() => this._animateToPage(this._normalizePageNumber(currentPage + 1))} style={this.props.arrowstyle}><Text>{this.props.rightArrowText ? this.props.rightArrowText : 'Right'}</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => this.animateToPage(this._normalizePageNumber(currentPage - 1))} style={this.props.arrowstyle}><Text>{this.props.leftArrowText ? this.props.leftArrowText : 'Left'}</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => this.animateToPage(this._normalizePageNumber(currentPage + 1))} style={this.props.arrowstyle}><Text>{this.props.rightArrowText ? this.props.rightArrowText : 'Right'}</Text></TouchableOpacity>
         </View>
       </View>
     );
   }
 
+  _setContents() {
+    return new Promise(resolve => {
+      const { size } = this.state;
+      const childrenLength = React.Children.count(this.props.children);
+
+      const contents = (
+        <ScrollView
+          ref={(c) => { this.scrollView = c; }}
+          onScrollBeginDrag={this._onScrollBegin}
+          onMomentumScrollEnd={this._onScrollEnd}
+          alwaysBounceHorizontal={false}
+          alwaysBounceVertical={false}
+          contentInset={{ top: 0 }}
+          automaticallyAdjustContentInsets={false}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          pagingEnabled
+          bounces={false}
+          contentContainerStyle={[
+            styles.horizontalScroll,
+            this.props.contentContainerStyle,
+            {
+              width: size.width * (childrenLength + (childrenLength > 1 ? 2 : 0)),
+              height: size.height,
+            },
+          ]}
+        >
+          {this.pages}
+        </ScrollView>
+      );
+      this.setState({ contents });
+      resolve();
+    });
+  }
 
   render() {
-    const { size } = this.state;
-    const children = this.props.children;
-    let pages = [];
-
-    if (children && children.length > 1) {
-      // add all pages
-      for (let i = 0; i < children.length; i += 1) {
-        pages.push(children[i]);
-      }
-      // We want to make infinite pages structure like this: 1-2-3-1-2
-      // so we add first and second page again to the end
-      pages.push(children[0]);
-      pages.push(children[1]);
-    } else if (children.length === 1) {
-      pages.push(children[0]);
-    } else if (children) {
-      pages.push(children);
-    } else {
-      return (
-        <Text style={{ backgroundColor: 'white' }}>
-          You are supposed to add children inside Carousel
-        </Text>
-      );
-    }
-
-    pages = pages.map((page, i) => (
-      <TouchableWithoutFeedback style={[{ ...size }, this.props.pageStyle]} key={`page${i}`}>
-        {page}
-      </TouchableWithoutFeedback>
-    ));
+    const { contents } = this.state;
 
     const containerProps = {
       ref: (c) => { this.container = c; },
       onLayout: this._onLayout,
       style: [this.props.style],
     };
-
-    const contents = (
-      <ScrollView
-        ref={(c) => { this.scrollView = c; }}
-        onScrollBeginDrag={this._onScrollBegin}
-        onMomentumScrollEnd={this._onScrollEnd}
-        alwaysBounceHorizontal={false}
-        alwaysBounceVertical={false}
-        contentInset={{ top: 0 }}
-        automaticallyAdjustContentInsets={false}
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        pagingEnabled
-        bounces={false}
-        contentContainerStyle={[
-          styles.horizontalScroll,
-          this.props.contentContainerStyle,
-          {
-            width: size.width * (children.length + (children.length > 1 ? 2 : 0)),
-            height: size.height,
-          },
-        ]}
-      >
-        {pages}
-      </ScrollView>);
 
     return (
       <View {...containerProps}>

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.6
+- Fix issue with carousel toScroll not working properly on Android
+- Performance optimizations
+
 ## 0.1.3
 
 - Fixed issue with `currentPage` property not working properly
