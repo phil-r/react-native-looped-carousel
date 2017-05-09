@@ -172,14 +172,11 @@ export default class Carousel extends Component {
 
   _onLayout = () => {
     this.container.measure((x, y, w, h) => {
-      if (w !== this.state.size.width || h !== this.state.size.height) {
-        this.setState({
-          size: { width: w, height: h },
-        }, () => {
-          this._setContents();
-          this._placeCritical(this.state.currentPage);
-        });
-      }
+      this.setState({
+        size: { width: w, height: h },
+      });
+      // remove setTimeout wrapper when https://github.com/facebook/react-native/issues/6849 is resolved.
+      setTimeout(() => this._placeCritical(this.state.currentPage), 0);
     });
   }
 
