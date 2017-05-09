@@ -190,12 +190,12 @@ export default class Carousel extends Component {
     }
   }
 
-  _scrollTo = (offset, animated) => {
+  _scrollTo = ({ offset, animated, nofix }) => {
     if (this.scrollView) {
       this.scrollView.scrollTo({ y: 0, x: offset, animated });
 
       // Fix bug #50
-      if (Platform.OS === 'android' && !animated) {
+      if (!nofix && Platform.OS === 'android' && !animated) {
         this.scrollView.scrollTo({ y: 0, x: offset, animated: true });
       }
     }
@@ -215,13 +215,20 @@ export default class Carousel extends Component {
       currentPage = 0;
     }
     if (currentPage === 0) {
-      this._scrollTo((childrenLength - 1) * width, false);
-      this._scrollTo(childrenLength * width, true);
+      // animate properly based on direction
+      const scrollMultiplier = this.state.currentPage === 1 ? 1 : -1;
+      this._scrollTo({
+        offset: (childrenLength + (1 * scrollMultiplier)) * width,
+        animated: false,
+        nofix: true,
+      });
+      this._scrollTo({ offset: childrenLength * width, animated: true });
     } else if (currentPage === 1) {
-      this._scrollTo(0, false);
-      this._scrollTo(width, true);
+      const scrollMultiplier = this.state.currentPage === 0 ? 0 : 2;
+      this._scrollTo({ offset: width * scrollMultiplier, animated: false, nofix: true });
+      this._scrollTo({ offset: width, animated: true });
     } else {
-      this._scrollTo(currentPage * width, true);
+      this._scrollTo({ offset: currentPage * width, animated: true });
     }
     this._setCurrentPage(currentPage);
     this._setUpTimer();
@@ -231,13 +238,13 @@ export default class Carousel extends Component {
     const { childrenLength } = this.state;
     const { width } = this.state.size;
     if (childrenLength === 1) {
-      this._scrollTo(0, false);
+      this._scrollTo({ offset: 0, animated: false });
     } else if (page === 0) {
-      this._scrollTo(childrenLength * width, false);
+      this._scrollTo({ offset: childrenLength * width, animated: false });
     } else if (page === 1) {
-      this._scrollTo(width, false);
+      this._scrollTo({ offset: width, animated: false });
     } else {
-      this._scrollTo(page * width, false);
+      this._scrollTo({ offset: page * width, animated: false });
     }
   }
 
