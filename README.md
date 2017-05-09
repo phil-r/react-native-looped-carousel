@@ -30,6 +30,7 @@ onAnimateNextPage | func | null | callback that is called with 0-based Id of the
 **Pagination** | --- | --- | ---
 pageInfo | boolean | false | shows `{currentPage} / {totalNumberOfPages}` pill at the bottom
 pageInfoBackgroundColor | string | 'rgba(0, 0, 0, 0.25)' | background color for pageInfo
+pageInfoBottomContainerStyle | style | null | style for the pageInfo container
 pageInfoTextStyle | style | null | style for text in pageInfo
 pageInfoTextSeparator | string | ' / ' | separator for `{currentPage}` and `{totalNumberOfPages}`
 **Bullets** | --- | --- | ---
