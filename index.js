@@ -93,7 +93,7 @@ export default class Carousel extends Component {
       this._setUpTimer();
     }
     // Set up pages but not content. Content will be set up via onLayout event.
-    this._setUpPages();
+    this._setUpPages().then(() => this.setState({ contents: this.pages }));
   }
 
   componentWillUnmount() {
@@ -107,8 +107,8 @@ export default class Carousel extends Component {
         const length = React.Children.count(nextProps.children);
         childrenLength = length || 1;
       }
-      this.setState({ childrenLength, contents: null }, () => {
-        this._setUpPages().then(this._setContents());
+      this.setState({ childrenLength }, () => {
+        this._setUpPages().then(() => this.setState({ contents: this.pages }));
       });
       this._setUpTimer();
     }
@@ -172,9 +172,7 @@ export default class Carousel extends Component {
 
   _onLayout = () => {
     this.container.measure((x, y, w, h) => {
-      this.setState({
-        size: { width: w, height: h },
-      });
+      this.setState({ size: { width: w, height: h } });
       // remove setTimeout wrapper when https://github.com/facebook/react-native/issues/6849 is resolved.
       setTimeout(() => this._placeCritical(this.state.currentPage), 0);
     });
@@ -311,12 +309,20 @@ export default class Carousel extends Component {
     );
   }
 
-  _setContents() {
-    return new Promise(resolve => {
-      const { size } = this.state;
-      const childrenLength = React.Children.count(this.props.children);
+  render() {
+    const { contents } = this.state;
 
-      const contents = (
+    const containerProps = {
+      ref: (c) => { this.container = c; },
+      onLayout: this._onLayout,
+      style: [this.props.style],
+    };
+
+    const { size } = this.state;
+    const childrenLength = React.Children.count(this.props.children);
+
+    return (
+      <View {...containerProps}>
         <ScrollView
           ref={(c) => { this.scrollView = c; }}
           onScrollBeginDrag={this._onScrollBegin}
@@ -338,26 +344,8 @@ export default class Carousel extends Component {
             },
           ]}
         >
-          {this.pages}
+          {contents}
         </ScrollView>
-      );
-      this.setState({ contents });
-      resolve();
-    });
-  }
-
-  render() {
-    const { contents } = this.state;
-
-    const containerProps = {
-      ref: (c) => { this.container = c; },
-      onLayout: this._onLayout,
-      style: [this.props.style],
-    };
-
-    return (
-      <View {...containerProps}>
-        {contents}
         {this.props.arrows && this._renderArrows(this.state.childrenLength)}
         {this.props.bullets && this._renderBullets(this.state.childrenLength)}
         {this.props.pageInfo && this._renderPageInfo(this.state.childrenLength)}
