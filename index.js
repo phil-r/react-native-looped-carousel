@@ -93,7 +93,7 @@ export default class Carousel extends Component {
       this._setUpTimer();
     }
     // Set up pages but not content. Content will be set up via onLayout event.
-    this._setUpPages();
+    this._setUpPages().then(() => this.setState({ contents: this.pages }));
   }
 
   componentWillUnmount() {
@@ -107,8 +107,8 @@ export default class Carousel extends Component {
         const length = React.Children.count(nextProps.children);
         childrenLength = length || 1;
       }
-      this.setState({ childrenLength, contents: null }, () => {
-        this._setUpPages().then(this._setContents());
+      this.setState({ childrenLength }, () => {
+        this._setUpPages().then(() => this.setState({ contents: this.pages }));
       });
       this._setUpTimer();
     }
@@ -172,9 +172,7 @@ export default class Carousel extends Component {
 
   _onLayout = () => {
     this.container.measure((x, y, w, h) => {
-      this.setState({
-        size: { width: w, height: h },
-      });
+      this.setState({ size: { width: w, height: h } });
       // remove setTimeout wrapper when https://github.com/facebook/react-native/issues/6849 is resolved.
       setTimeout(() => this._placeCritical(this.state.currentPage), 0);
     });
@@ -192,12 +190,12 @@ export default class Carousel extends Component {
     }
   }
 
-  _scrollTo = (offset, animated) => {
+  _scrollTo = ({ offset, animated, nofix }) => {
     if (this.scrollView) {
       this.scrollView.scrollTo({ y: 0, x: offset, animated });
 
       // Fix bug #50
-      if (Platform.OS === 'android' && !animated) {
+      if (!nofix && Platform.OS === 'android' && !animated) {
         this.scrollView.scrollTo({ y: 0, x: offset, animated: true });
       }
     }
@@ -217,13 +215,20 @@ export default class Carousel extends Component {
       currentPage = 0;
     }
     if (currentPage === 0) {
-      this._scrollTo((childrenLength - 1) * width, false);
-      this._scrollTo(childrenLength * width, true);
+      // animate properly based on direction
+      const scrollMultiplier = this.state.currentPage === 1 ? 1 : -1;
+      this._scrollTo({
+        offset: (childrenLength + (1 * scrollMultiplier)) * width,
+        animated: false,
+        nofix: true,
+      });
+      this._scrollTo({ offset: childrenLength * width, animated: true });
     } else if (currentPage === 1) {
-      this._scrollTo(0, false);
-      this._scrollTo(width, true);
+      const scrollMultiplier = this.state.currentPage === 0 ? 0 : 2;
+      this._scrollTo({ offset: width * scrollMultiplier, animated: false, nofix: true });
+      this._scrollTo({ offset: width, animated: true });
     } else {
-      this._scrollTo(currentPage * width, true);
+      this._scrollTo({ offset: currentPage * width, animated: true });
     }
     this._setCurrentPage(currentPage);
     this._setUpTimer();
@@ -233,13 +238,13 @@ export default class Carousel extends Component {
     const { childrenLength } = this.state;
     const { width } = this.state.size;
     if (childrenLength === 1) {
-      this._scrollTo(0, false);
+      this._scrollTo({ offset: 0, animated: false });
     } else if (page === 0) {
-      this._scrollTo(childrenLength * width, false);
+      this._scrollTo({ offset: childrenLength * width, animated: false });
     } else if (page === 1) {
-      this._scrollTo(width, false);
+      this._scrollTo({ offset: width, animated: false });
     } else {
-      this._scrollTo(page * width, false);
+      this._scrollTo({ offset: page * width, animated: false });
     }
   }
 
@@ -302,8 +307,8 @@ export default class Carousel extends Component {
       currentPage = childrenLength;
     }
     return (
-      <View style={styles.arrows}>
-        <View style={[styles.arrowsContainer, this.props.arrowsContainerStyle]}>
+      <View style={styles.arrows} pointerEvents="box-none">
+        <View style={[styles.arrowsContainer, this.props.arrowsContainerStyle]} pointerEvents="box-none">
           <TouchableOpacity onPress={() => this.animateToPage(this._normalizePageNumber(currentPage - 1))} style={this.props.arrowstyle}><Text>{this.props.leftArrowText ? this.props.leftArrowText : 'Left'}</Text></TouchableOpacity>
           <TouchableOpacity onPress={() => this.animateToPage(this._normalizePageNumber(currentPage + 1))} style={this.props.arrowstyle}><Text>{this.props.rightArrowText ? this.props.rightArrowText : 'Right'}</Text></TouchableOpacity>
         </View>
@@ -311,12 +316,20 @@ export default class Carousel extends Component {
     );
   }
 
-  _setContents() {
-    return new Promise(resolve => {
-      const { size } = this.state;
-      const childrenLength = React.Children.count(this.props.children);
+  render() {
+    const { contents } = this.state;
 
-      const contents = (
+    const containerProps = {
+      ref: (c) => { this.container = c; },
+      onLayout: this._onLayout,
+      style: [this.props.style],
+    };
+
+    const { size } = this.state;
+    const childrenLength = React.Children.count(this.props.children);
+
+    return (
+      <View {...containerProps}>
         <ScrollView
           ref={(c) => { this.scrollView = c; }}
           onScrollBeginDrag={this._onScrollBegin}
@@ -338,26 +351,8 @@ export default class Carousel extends Component {
             },
           ]}
         >
-          {this.pages}
+          {contents}
         </ScrollView>
-      );
-      this.setState({ contents });
-      resolve();
-    });
-  }
-
-  render() {
-    const { contents } = this.state;
-
-    const containerProps = {
-      ref: (c) => { this.container = c; },
-      onLayout: this._onLayout,
-      style: [this.props.style],
-    };
-
-    return (
-      <View {...containerProps}>
-        {contents}
         {this.props.arrows && this._renderArrows(this.state.childrenLength)}
         {this.props.bullets && this._renderBullets(this.state.childrenLength)}
         {this.props.pageInfo && this._renderPageInfo(this.state.childrenLength)}
