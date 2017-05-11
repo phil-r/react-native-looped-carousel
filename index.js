@@ -8,6 +8,7 @@ import {
   View,
   TouchableWithoutFeedback,
 } from 'react-native';
+import { isEqual } from 'lodash';
 
 
 const PAGE_CHANGE_DELAY = 4000;
@@ -103,7 +104,7 @@ export default class Carousel extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.children !== nextProps.children) {
+    if (!isEqual(this.props.children, nextProps.children)) {
       let childrenLength = 0;
       if (nextProps.children) {
         const length = React.Children.count(nextProps.children);
