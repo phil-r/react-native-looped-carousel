@@ -294,8 +294,8 @@ export default class Carousel extends Component {
         </TouchableWithoutFeedback>);
     }
     return (
-      <View style={styles.bullets}>
-        <View style={[styles.bulletsContainer, this.props.bulletsContainerStyle]}>
+      <View style={styles.bullets} pointerEvents="box-none">
+        <View style={[styles.bulletsContainer, this.props.bulletsContainerStyle]} pointerEvents="box-none">
           {bullets}
         </View>
       </View>
