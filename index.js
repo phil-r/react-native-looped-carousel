@@ -64,7 +64,7 @@ export default class Carousel extends Component {
     contentContainerStyle: undefined,
     pageInfoTextStyle: undefined,
     pageInfoBottomContainerStyle: undefined,
-    bulletsWrapperStyle:undefined,
+    bulletsWrapperStyle: undefined,
     bulletsContainerStyle: undefined,
     chosenBulletStyle: undefined,
     bulletStyle: undefined,
@@ -296,7 +296,7 @@ export default class Carousel extends Component {
         </TouchableWithoutFeedback>);
     }
     return (
-      <View style={[styles.bullets,this.props.bulletsWrapperStyle]} pointerEvents="box-none">
+      <View style={[styles.bullets, this.props.bulletsWrapperStyle]} pointerEvents="box-none">
         <View style={[styles.bulletsContainer, this.props.bulletsContainerStyle]} pointerEvents="box-none">
           {bullets}
         </View>
