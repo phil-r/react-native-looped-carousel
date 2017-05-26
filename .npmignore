@@ -20,3 +20,5 @@ node_modules
 npm-debug.log
 
 Examples
+
+__tests__

@@ -11,7 +11,7 @@
   ],
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --verbose",
     "lint": "eslint index.js"
   },
   "repository": {
@@ -40,13 +40,23 @@
   },
   "devDependencies": {
     "babel-eslint": "^7.0.0",
+    "babel-jest": "^20.0.3",
+    "babel-preset-react-native": "^1.9.2",
     "eslint": "^3.6.1",
     "eslint-config-airbnb": "^14.0.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^3.0.2",
-    "eslint-plugin-react": "^6.3.0"
+    "eslint-plugin-react": "^6.3.0",
+    "jest": "^20.0.4",
+    "react": "^15.5.4",
+    "react-native": "^0.42.0",
+    "react-test-renderer": "^15.5.4"
   },
   "dependencies": {
     "lodash.isequal": "^4.5.0"
+  },
+  "jest": {
+    "notify": true,
+    "preset": "react-native"
   }
 }
