@@ -269,7 +269,7 @@ export default class Carousel extends Component {
   }
 
   _renderPageInfo = (pageLength) =>
-    <View style={[styles.pageInfoBottomContainer, this.props.pageInfoBottomContainerStyle]} pointerEvents="none">
+    (<View style={[styles.pageInfoBottomContainer, this.props.pageInfoBottomContainerStyle]} pointerEvents="none">
       <View style={styles.pageInfoContainer}>
         <View
           style={[styles.pageInfoPill, { backgroundColor: this.props.pageInfoBackgroundColor }]}
@@ -281,7 +281,7 @@ export default class Carousel extends Component {
           </Text>
         </View>
       </View>
-    </View>
+    </View>)
 
   _renderBullets = (pageLength) => {
     const bullets = [];
