@@ -8,6 +8,7 @@ import {
   View,
   TouchableWithoutFeedback,
 } from 'react-native';
+import PropTypes from 'prop-types';
 import isEqual from 'lodash.isequal';
 
 
@@ -19,35 +20,35 @@ const PAGE_CHANGE_DELAY = 4000;
 */
 export default class Carousel extends Component {
   static propTypes = {
-    children: React.PropTypes.node.isRequired,
-    autoplay: React.PropTypes.bool,
-    delay: React.PropTypes.number,
-    currentPage: React.PropTypes.number,
+    children: PropTypes.node.isRequired,
+    autoplay: PropTypes.bool,
+    delay: PropTypes.number,
+    currentPage: PropTypes.number,
     style: View.propTypes.style,
     pageStyle: View.propTypes.style,
     contentContainerStyle: View.propTypes.style,
-    pageInfo: React.PropTypes.bool,
-    pageInfoBackgroundColor: React.PropTypes.string,
+    pageInfo: PropTypes.bool,
+    pageInfoBackgroundColor: PropTypes.string,
     pageInfoTextStyle: Text.propTypes.style,
     pageInfoBottomContainerStyle: View.propTypes.style,
-    pageInfoTextSeparator: React.PropTypes.string,
-    bullets: React.PropTypes.bool,
+    pageInfoTextSeparator: PropTypes.string,
+    bullets: PropTypes.bool,
     bulletsContainerStyle: Text.propTypes.style,
     bulletStyle: Text.propTypes.style,
-    arrows: React.PropTypes.bool,
+    arrows: PropTypes.bool,
     arrowsContainerStyle: Text.propTypes.style,
     arrowStyle: Text.propTypes.style,
-    leftArrowText: React.PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.element,
+    leftArrowText: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.element,
     ]),
-    rightArrowText: React.PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.element,
+    rightArrowText: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.element,
     ]),
     chosenBulletStyle: Text.propTypes.style,
-    onAnimateNextPage: React.PropTypes.func,
-    swipe: React.PropTypes.bool,
+    onAnimateNextPage: PropTypes.func,
+    swipe: PropTypes.bool,
   };
 
   static defaultProps = {
