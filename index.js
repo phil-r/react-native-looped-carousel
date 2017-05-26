@@ -8,7 +8,7 @@ import {
   View,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { isEqual } from 'lodash.isequal';
+import isEqual from 'lodash.isequal';
 
 
 const PAGE_CHANGE_DELAY = 4000;
