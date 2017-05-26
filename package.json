@@ -45,5 +45,8 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "eslint-plugin-react": "^6.3.0"
+  },
+  "dependencies": {
+    "lodash.isequal": "^4.5.0"
   }
 }
