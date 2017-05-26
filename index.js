@@ -32,6 +32,7 @@ export default class Carousel extends Component {
     pageInfoBottomContainerStyle: View.propTypes.style,
     pageInfoTextSeparator: React.PropTypes.string,
     bullets: React.PropTypes.bool,
+    bulletsWrapperStyle: Text.propTypes.style,
     bulletsContainerStyle: Text.propTypes.style,
     bulletStyle: Text.propTypes.style,
     arrows: React.PropTypes.bool,
@@ -64,6 +65,7 @@ export default class Carousel extends Component {
     contentContainerStyle: undefined,
     pageInfoTextStyle: undefined,
     pageInfoBottomContainerStyle: undefined,
+    bulletsWrapperStyle: undefined,
     bulletsContainerStyle: undefined,
     chosenBulletStyle: undefined,
     bulletStyle: undefined,
@@ -296,7 +298,7 @@ export default class Carousel extends Component {
         </TouchableWithoutFeedback>);
     }
     return (
-      <View style={styles.bullets} pointerEvents="box-none">
+      <View style={[styles.bullets, this.props.bulletsWrapperStyle]} pointerEvents="box-none">
         <View style={[styles.bulletsContainer, this.props.bulletsContainerStyle]} pointerEvents="box-none">
           {bullets}
         </View>
