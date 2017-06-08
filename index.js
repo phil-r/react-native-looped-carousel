@@ -175,12 +175,11 @@ export default class Carousel extends Component {
     this._setUpTimer();
   }
 
-  _onLayout = () => {
-    this.container.measure((x, y, w, h) => {
-      this.setState({ size: { width: w, height: h } });
-      // remove setTimeout wrapper when https://github.com/facebook/react-native/issues/6849 is resolved.
-      setTimeout(() => this._placeCritical(this.state.currentPage), 0);
-    });
+  _onLayout = (event) => {
+    const { height, width } = event.nativeEvent.layout;
+    this.setState({ size: { width, height } });
+    // remove setTimeout wrapper when https://github.com/facebook/react-native/issues/6849 is resolved.
+    setTimeout(() => this._placeCritical(this.state.currentPage), 0);
   }
 
   _clearTimer = () => {
@@ -325,7 +324,6 @@ export default class Carousel extends Component {
     const { contents } = this.state;
 
     const containerProps = {
-      ref: (c) => { this.container = c; },
       onLayout: this._onLayout,
       style: [this.props.style],
     };
