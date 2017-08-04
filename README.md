@@ -55,9 +55,9 @@ Three options :
 
 ```js
 // assuming ref is set up on the carousel as (ref) => this._carousel = ref
+onPress={() => {this._carousel.animateToPage(page)}}
 onPress={() => {this._carousel._animateNextPage()}}
 onPress={() => {this._carousel._animatePreviousPage()}}
-onPress={() => {this._carousel.animateToPage(page)}}
 ```
 
 
