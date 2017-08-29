@@ -38,6 +38,8 @@ export default class Carousel extends Component {
     arrows: PropTypes.bool,
     arrowsContainerStyle: Text.propTypes.style,
     arrowStyle: Text.propTypes.style,
+    leftArrowStyle: PropTypes.style,
+    rightArrowStyle: PropTypes.style,
     leftArrowText: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.element,
@@ -70,6 +72,8 @@ export default class Carousel extends Component {
     bulletStyle: undefined,
     arrowsContainerStyle: undefined,
     arrowStyle: undefined,
+    leftArrowStyle: undefined,
+    rightArrowStyle: undefined,
     leftArrowText: '',
     rightArrowText: '',
     onAnimateNextPage: undefined,
@@ -314,8 +318,8 @@ export default class Carousel extends Component {
     return (
       <View style={styles.arrows} pointerEvents="box-none">
         <View style={[styles.arrowsContainer, this.props.arrowsContainerStyle]} pointerEvents="box-none">
-          <TouchableOpacity onPress={() => this.animateToPage(this._normalizePageNumber(currentPage - 1))} style={this.props.arrowStyle}><Text>{this.props.leftArrowText ? this.props.leftArrowText : 'Left'}</Text></TouchableOpacity>
-          <TouchableOpacity onPress={() => this.animateToPage(this._normalizePageNumber(currentPage + 1))} style={this.props.arrowStyle}><Text>{this.props.rightArrowText ? this.props.rightArrowText : 'Right'}</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => this.animateToPage(this._normalizePageNumber(currentPage - 1))} style={this.props.arrowStyle}><Text style={this.props.leftArrowStyle}>{this.props.leftArrowText ? this.props.leftArrowText : 'Left'}</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => this.animateToPage(this._normalizePageNumber(currentPage + 1))} style={this.props.arrowStyle}><Text style={this.props.rightArrowStyle}>{this.props.rightArrowText ? this.props.rightArrowText : 'Right'}</Text></TouchableOpacity>
         </View>
       </View>
     );
