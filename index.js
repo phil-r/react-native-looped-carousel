@@ -38,8 +38,8 @@ export default class Carousel extends Component {
     arrows: PropTypes.bool,
     arrowsContainerStyle: Text.propTypes.style,
     arrowStyle: Text.propTypes.style,
-    leftArrowStyle: PropTypes.style,
-    rightArrowStyle: PropTypes.style,
+    leftArrowStyle: Text.PropTypes.style,
+    rightArrowStyle: Text.propTypes.style,
     leftArrowText: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.element,
