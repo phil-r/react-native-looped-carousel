@@ -38,7 +38,7 @@ export default class Carousel extends Component {
     arrows: PropTypes.bool,
     arrowsContainerStyle: Text.propTypes.style,
     arrowStyle: Text.propTypes.style,
-    leftArrowStyle: Text.PropTypes.style,
+    leftArrowStyle: Text.propTypes.style,
     rightArrowStyle: Text.propTypes.style,
     leftArrowText: PropTypes.oneOfType([
       PropTypes.string,
