@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   View,
+  ViewPropTypes,
   TouchableWithoutFeedback,
 } from 'react-native';
 import PropTypes from 'prop-types';
@@ -13,6 +14,9 @@ import isEqual from 'lodash.isequal';
 
 
 const PAGE_CHANGE_DELAY = 4000;
+
+// if ViewPropTypes is not defined fall back to View.propTypes (to support RN < 0.44)
+const viewPropTypes = ViewPropTypes || View.propTypes;
 
 /**
  * Animates pages in cycle
@@ -24,13 +28,13 @@ export default class Carousel extends Component {
     autoplay: PropTypes.bool,
     delay: PropTypes.number,
     currentPage: PropTypes.number,
-    style: View.propTypes.style,
-    pageStyle: View.propTypes.style,
-    contentContainerStyle: View.propTypes.style,
+    style: viewPropTypes.style,
+    pageStyle: viewPropTypes.style,
+    contentContainerStyle: viewPropTypes.style,
     pageInfo: PropTypes.bool,
     pageInfoBackgroundColor: PropTypes.string,
     pageInfoTextStyle: Text.propTypes.style,
-    pageInfoBottomContainerStyle: View.propTypes.style,
+    pageInfoBottomContainerStyle: viewPropTypes.style,
     pageInfoTextSeparator: PropTypes.string,
     bullets: PropTypes.bool,
     bulletsContainerStyle: Text.propTypes.style,
