@@ -55,6 +55,9 @@ rightArrowStyle | style | null | style for right navigation arrow
 arrowsContainerStyle | style | null | style for the navigation arrows container
 leftArrowText | string | 'Left' | label for left navigation arrow
 rightArrowText | string | 'Right' | label for right navigation arrow
+leftArrowImage | Image source | null | image / icon for left navigation arrow
+rightArrowImage | Image source | null | image / icon for right navigation arrow
+arrowImageStyle | style | null | style for arrow images (e.g. width and height)
 
 ## Change the page
 
@@ -69,7 +72,6 @@ onPress={() => {this._carousel.animateToPage(page)}}
 onPress={() => {this._carousel._animateNextPage()}}
 onPress={() => {this._carousel._animatePreviousPage()}}
 ```
-
 
 ## Usage
 
