@@ -111,7 +111,6 @@ export default class Carousel extends Component {
   componentWillReceiveProps(nextProps) {
     if (!isEqual(this.props.children, nextProps.children)) {
       let childrenLength = 0;
-      this.setState({ currentPage: 0 });
       if (nextProps.children) {
         const length = React.Children.count(nextProps.children);
         childrenLength = length || 1;
