@@ -109,7 +109,10 @@ export default class Carousel extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!isEqual(this.props.children, nextProps.children)) {
+    const different = this.props.children.some((child, index) => {
+      return child.key !== nextProps.children[index].key;
+    })
+    if (different || this.props.children.length !== nextProps.children.length) {
       let childrenLength = 0;
       this.setState({ currentPage: 0 });
       if (nextProps.children) {
