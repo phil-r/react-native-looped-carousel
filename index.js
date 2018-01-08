@@ -320,7 +320,7 @@ export default class Carousel extends Component {
   }
 
   render() {
-    const contents = this.setUpPages();
+    const contents = this._setUpPages();
 
     const containerProps = {
       ref: (c) => { this.container = c; },
