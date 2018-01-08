@@ -10,7 +10,6 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import isEqual from 'lodash.isequal';
 
 
 const PAGE_CHANGE_DELAY = 4000;
@@ -109,9 +108,9 @@ export default class Carousel extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const different = this.props.children.some((child, index) => {
-      return child.key !== nextProps.children[index].key;
-    })
+    const different = this.props.children.some((child, index) => (
+      child.key !== nextProps.children[index].key
+    ));
     if (different || this.props.children.length !== nextProps.children.length) {
       let childrenLength = 0;
       this.setState({ currentPage: 0 });
