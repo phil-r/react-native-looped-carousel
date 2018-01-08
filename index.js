@@ -10,7 +10,6 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import isEqual from 'lodash.isequal';
 
 
 const PAGE_CHANGE_DELAY = 4000;
@@ -89,7 +88,6 @@ export default class Carousel extends Component {
         currentPage: props.currentPage,
         size,
         childrenLength,
-        contents: null,
       };
     } else {
       this.state = { size };
@@ -100,8 +98,6 @@ export default class Carousel extends Component {
     if (this.state.childrenLength) {
       this._setUpTimer();
     }
-    // Set up pages but not content. Content will be set up via onLayout event.
-    this._setUpPages().then(() => this.setState({ contents: this.pages }));
   }
 
   componentWillUnmount() {
@@ -109,49 +105,47 @@ export default class Carousel extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!isEqual(this.props.children, nextProps.children)) {
+    const different = this.props.children.some((child, index) => (
+      child.key !== nextProps.children[index].key
+    ));
+    if (different || this.props.children.length !== nextProps.children.length) {
       let childrenLength = 0;
       this.setState({ currentPage: 0 });
       if (nextProps.children) {
         const length = React.Children.count(nextProps.children);
         childrenLength = length || 1;
       }
-      this.setState({ childrenLength }, () => {
-        this._setUpPages().then(() => this.setState({ contents: this.pages }));
-      });
+      this.setState({ childrenLength });
       this._setUpTimer();
     }
   }
 
   _setUpPages() {
-    return new Promise(resolve => {
-      const { size } = this.state;
-      const children = React.Children.toArray(this.props.children);
-      const pages = [];
+    const { size } = this.state;
+    const children = React.Children.toArray(this.props.children);
+    const pages = [];
 
-      if (children && children.length > 1) {
-        // add all pages
-        for (let i = 0; i < children.length; i += 1) {
-          pages.push(children[i]);
-        }
-        // We want to make infinite pages structure like this: 1-2-3-1-2
-        // so we add first and second page again to the end
-        pages.push(children[0]);
-        pages.push(children[1]);
-      } else if (children) {
-        pages.push(children[0]);
-      } else {
-        pages.push(<View><Text>
-            You are supposed to add children inside Carousel
-        </Text></View>);
+    if (children && children.length > 1) {
+      // add all pages
+      for (let i = 0; i < children.length; i += 1) {
+        pages.push(children[i]);
       }
-      this.pages = pages.map((page, i) => (
-        <TouchableWithoutFeedback style={[{ ...size }, this.props.pageStyle]} key={`page${i}`}>
-          {page}
-        </TouchableWithoutFeedback>
-      ));
-      resolve();
-    });
+      // We want to make infinite pages structure like this: 1-2-3-1-2
+      // so we add first and second page again to the end
+      pages.push(children[0]);
+      pages.push(children[1]);
+    } else if (children) {
+      pages.push(children[0]);
+    } else {
+      pages.push(<View><Text>
+          You are supposed to add children inside Carousel
+      </Text></View>);
+    }
+    return pages.map((page, i) => (
+      <TouchableWithoutFeedback style={[{ ...size }, this.props.pageStyle]} key={`page${i}`}>
+        {page}
+      </TouchableWithoutFeedback>
+    ));
   }
 
   getCurrentPage() {
@@ -273,8 +267,8 @@ export default class Carousel extends Component {
     return this._normalizePageNumber(page);
   }
 
-  _renderPageInfo = (pageLength) =>
-    (<View style={[styles.pageInfoBottomContainer, this.props.pageInfoBottomContainerStyle]} pointerEvents="none">
+  _renderPageInfo = (pageLength) => (
+    <View style={[styles.pageInfoBottomContainer, this.props.pageInfoBottomContainerStyle]} pointerEvents="none">
       <View style={styles.pageInfoContainer}>
         <View
           style={[styles.pageInfoPill, { backgroundColor: this.props.pageInfoBackgroundColor }]}
@@ -326,7 +320,7 @@ export default class Carousel extends Component {
   }
 
   render() {
-    const { contents } = this.state;
+    const contents = this._setUpPages();
 
     const containerProps = {
       ref: (c) => { this.container = c; },
