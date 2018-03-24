@@ -16,10 +16,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/appintheair/react-native-looped-carousel"
+    "url": "https://github.com/phil-r/react-native-looped-carousel"
   },
   "bugs": {
-    "url": "https://github.com/appintheair/react-native-looped-carousel/issues"
+    "url": "https://github.com/phil-r/react-native-looped-carousel/issues"
   },
   "keywords": [
     "react",
