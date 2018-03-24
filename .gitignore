@@ -18,8 +18,7 @@ lto-llvm.*
 # node specific
 node_modules
 npm-debug.log
+yarn-error.log
 
 # Allow yarn.lock file
 !yarn.lock
-
-*.log

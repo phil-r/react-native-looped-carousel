@@ -17,6 +17,11 @@ Based on [react-native framework](https://github.com/facebook/react-native/) by 
 npm install react-native-looped-carousel --save
 ```
 
+## Examples
+
+ - [Simple](https://snack.expo.io/@phil/carousel-simple-example)
+ - [Modal](https://snack.expo.io/@phil/carousel-modal-example)
+
 ## Props
 
 Name | propType | default value | description
@@ -47,6 +52,7 @@ leftArrowText | string / element | 'Left' | label / icon for left navigation arr
 rightArrowText | string / element | 'Right' | label / icon for right navigation arrow
 
 ## Usage
+
 ```js
 import React, { Component } from 'react';
 import {
@@ -92,8 +98,6 @@ export default class CarouselExample extends Component {
   }
 }
 ```
-
-[Full example code](Examples/Simple)
 
 ## Used in
  - [React Native Buyscreen](https://github.com/appintheair/react-native-buyscreen)
