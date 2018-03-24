@@ -231,7 +231,7 @@ export default class Carousel extends Component {
     }
     if (currentPage === 0) {
       // animate properly based on direction
-      const scrollMultiplier = this.state.currentPage === 1 ? 1 : -1;
+      const scrollMultiplier = this.state.currentPage === 1 && childrenLength !== 2 ? 1 : -1;
       this._scrollTo({
         offset: (childrenLength + (1 * scrollMultiplier)) * width,
         animated: false,
@@ -267,7 +267,7 @@ export default class Carousel extends Component {
     const { childrenLength } = this.state;
     if (page === childrenLength) {
       return 0;
-    } else if (page >= childrenLength) {
+    } else if (page > childrenLength) {
       return 1;
     }
     return page;
