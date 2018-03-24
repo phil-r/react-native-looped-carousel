@@ -21,3 +21,5 @@ npm-debug.log
 
 # Allow yarn.lock file
 !yarn.lock
+
+*.log
