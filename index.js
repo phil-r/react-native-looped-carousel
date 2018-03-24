@@ -53,6 +53,7 @@ export default class Carousel extends Component {
     chosenBulletStyle: Text.propTypes.style,
     onAnimateNextPage: PropTypes.func,
     swipe: PropTypes.bool,
+    isLooped: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -78,6 +79,7 @@ export default class Carousel extends Component {
     rightArrowText: '',
     onAnimateNextPage: undefined,
     swipe: true,
+    isLooped: true,
   };
 
   constructor(props) {
@@ -136,10 +138,12 @@ export default class Carousel extends Component {
         for (let i = 0; i < children.length; i += 1) {
           pages.push(children[i]);
         }
-        // We want to make infinite pages structure like this: 1-2-3-1-2
-        // so we add first and second page again to the end
-        pages.push(children[0]);
-        pages.push(children[1]);
+        if (this.props.isLooped) {
+          // We want to make infinite pages structure like this: 1-2-3-1-2
+          // so we add first and second page again to the end
+          pages.push(children[0]);
+          pages.push(children[1]);
+        }
       } else if (children) {
         pages.push(children[0]);
       } else {
@@ -227,7 +231,7 @@ export default class Carousel extends Component {
     const { width } = this.state.size;
     const { childrenLength } = this.state;
     if (currentPage >= childrenLength) {
-      currentPage = 0;
+      currentPage = this.props.isLooped ? 0 : childrenLength - 1;
     }
     if (currentPage === 0) {
       // animate properly based on direction
@@ -254,10 +258,8 @@ export default class Carousel extends Component {
     const { width } = this.state.size;
     if (childrenLength === 1) {
       this._scrollTo({ offset: 0, animated: false });
-    } else if (page === 0) {
+    } else if (this.props.isLooped && page === 0) {
       this._scrollTo({ offset: childrenLength * width, animated: false });
-    } else if (page === 1) {
-      this._scrollTo({ offset: width, animated: false });
     } else {
       this._scrollTo({ offset: page * width, animated: false });
     }
@@ -361,7 +363,7 @@ export default class Carousel extends Component {
             styles.horizontalScroll,
             this.props.contentContainerStyle,
             {
-              width: size.width * (childrenLength + (childrenLength > 1 ? 2 : 0)),
+              width: size.width * (childrenLength + (childrenLength > 1 && this.props.isLooped ? 2 : 0)),
               height: size.height,
             },
           ]}
