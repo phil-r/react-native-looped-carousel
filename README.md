@@ -1,15 +1,15 @@
 # Looped carousel for React Native
 [![NPM version](http://img.shields.io/npm/v/react-native-looped-carousel.svg?style=flat)](https://www.npmjs.com/package/react-native-looped-carousel)
-[![Build Status](https://travis-ci.org/appintheair/react-native-looped-carousel.svg)](https://travis-ci.org/appintheair/react-native-looped-carousel)
-[![Dependency Status](https://david-dm.org/appintheair/react-native-looped-carousel.svg)](https://david-dm.org/appintheair/react-native-looped-carousel)
-[![devDependency Status](https://david-dm.org/appintheair/react-native-looped-carousel/dev-status.svg)](https://david-dm.org/appintheair/react-native-looped-carousel#info=devDependencies)
+[![Build Status](https://travis-ci.org/phil-r/react-native-looped-carousel.svg)](https://travis-ci.org/phil-r/react-native-looped-carousel)
+[![Dependency Status](https://david-dm.org/phil-r/react-native-looped-carousel.svg)](https://david-dm.org/phil-r/react-native-looped-carousel)
+[![devDependency Status](https://david-dm.org/phil-r/react-native-looped-carousel/dev-status.svg)](https://david-dm.org/phil-r/react-native-looped-carousel#info=devDependencies)
 
 Full-fledged "infinite" carousel for your next [react-native](https://github.com/facebook/react-native/) project. Supports iOS and Android.
 
 Based on [react-native framework](https://github.com/facebook/react-native/) by Facebook.
 
 ## Demo
-![](http://spronin.github.io/img/react.gif)
+![demo gif](https://user-images.githubusercontent.com/577316/37863420-40c62c8c-2f5e-11e8-8eb4-23b8e7ea499e.gif)
 
 ## Install
 
@@ -103,4 +103,4 @@ export default class CarouselExample extends Component {
 
 ----
 
-More on react-native here: http://facebook.github.io/react-native/docs/getting-started.html#content
+More on react-native here: https://facebook.github.io/react-native/docs/getting-started.html
