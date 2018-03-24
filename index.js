@@ -369,7 +369,8 @@ export default class Carousel extends Component {
             styles.horizontalScroll,
             this.props.contentContainerStyle,
             {
-              width: size.width * (childrenLength + (childrenLength > 1 && this.props.isLooped ? 2 : 0)),
+              width: size.width * (childrenLength +
+                (childrenLength > 1 && this.props.isLooped ? 2 : 0)),
               height: size.height,
             },
           ]}
