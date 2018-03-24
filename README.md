@@ -51,6 +51,21 @@ arrowsContainerStyle | style | null | style for the navigation arrows container
 leftArrowText | string / element | 'Left' | label / icon for left navigation arrow
 rightArrowText | string / element | 'Right' | label / icon for right navigation arrow
 
+## Change the page
+
+Three options :
+- Go to a specific page
+- Go to the next page
+- Go to the previous page
+
+```js
+// assuming ref is set up on the carousel as (ref) => this._carousel = ref
+onPress={() => {this._carousel.animateToPage(page)}}
+onPress={() => {this._carousel._animateNextPage()}}
+onPress={() => {this._carousel._animatePreviousPage()}}
+```
+
+
 ## Usage
 
 ```js

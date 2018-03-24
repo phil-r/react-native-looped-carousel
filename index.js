@@ -214,6 +214,11 @@ export default class Carousel extends Component {
     this.animateToPage(this._normalizePageNumber(currentPage + 1));
   }
 
+  _animatePreviousPage = () => {
+    const { currentPage } = this.state;
+    this.animateToPage(this._normalizePageNumber(currentPage - 1));
+  }
+
   animateToPage = (page) => {
     let currentPage = page;
     this._clearTimer();
