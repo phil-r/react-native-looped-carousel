@@ -33,6 +33,7 @@ pageStyle | style | null | style for pages
 contentContainerStyle | style | null | `contentContainerStyle` for the scrollView
 onAnimateNextPage | func | null | callback that is called with 0-based Id of the current page
 swipe | bool | true | motion control for Swipe
+isLooped | bool | true | if it's possible to scroll infinitely
 **Pagination** | --- | --- | ---
 pageInfo | boolean | false | shows `{currentPage} / {totalNumberOfPages}` pill at the bottom
 pageInfoBackgroundColor | string | 'rgba(0, 0, 0, 0.25)' | background color for pageInfo
@@ -47,6 +48,8 @@ chosenBulletStyle | style | null | style for the selected bullet
 **Arrows** | --- | --- | ---
 arrows | bool | false | wether to show navigation arrows for the carousel
 arrowStyle | style | null | style for navigation arrows
+leftArrowStyle | style | null | style for left navigation arrow
+rightArrowStyle | style | null | style for right navigation arrow
 arrowsContainerStyle | style | null | style for the navigation arrows container
 leftArrowText | string / element | 'Left' | label / icon for left navigation arrow
 rightArrowText | string / element | 'Right' | label / icon for right navigation arrow
