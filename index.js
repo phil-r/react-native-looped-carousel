@@ -44,14 +44,8 @@ export default class Carousel extends Component {
     arrowStyle: Text.propTypes.style,
     leftArrowStyle: Text.propTypes.style,
     rightArrowStyle: Text.propTypes.style,
-    leftArrowText: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.element,
-    ]),
-    rightArrowText: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.element,
-    ]),
+    leftArrowText: PropTypes.string,
+    rightArrowText: PropTypes.string,
     chosenBulletStyle: Text.propTypes.style,
     onAnimateNextPage: PropTypes.func,
     swipe: PropTypes.bool,
@@ -221,19 +215,30 @@ export default class Carousel extends Component {
 
   _animateNextPage = () => {
     const { currentPage } = this.state;
-    this.animateToPage(this._normalizePageNumber(currentPage + 1));
+    const nextPage = this._normalizePageNumber(currentPage + 1);
+
+    // prevent from looping
+    if (!this.props.isLooped && nextPage < currentPage) {
+      return;
+    }
+    this.animateToPage(nextPage);
   }
 
   _animatePreviousPage = () => {
     const { currentPage } = this.state;
-    this.animateToPage(this._normalizePageNumber(currentPage - 1));
+    const nextPage = this._normalizePageNumber(currentPage - 1);
+
+    // prevent from looping
+    if (!this.props.isLooped && nextPage > currentPage) {
+      return;
+    }
+    this.animateToPage(nextPage);
   }
 
   animateToPage = (page) => {
     let currentPage = page;
     this._clearTimer();
-    const { width } = this.state.size;
-    const { childrenLength } = this.state;
+    const { childrenLength, size: { width } } = this.state;
     if (currentPage >= childrenLength) {
       currentPage = this.props.isLooped ? 0 : childrenLength - 1;
     }
@@ -274,6 +279,8 @@ export default class Carousel extends Component {
       return 0;
     } else if (page > childrenLength) {
       return 1;
+    } else if (page < 0) {
+      return childrenLength - 1;
     }
     return page;
   }
@@ -329,8 +336,22 @@ export default class Carousel extends Component {
     return (
       <View style={styles.arrows} pointerEvents="box-none">
         <View style={[styles.arrowsContainer, this.props.arrowsContainerStyle]} pointerEvents="box-none">
-          <TouchableOpacity onPress={() => this.animateToPage(this._normalizePageNumber(currentPage - 1))} style={this.props.arrowStyle}><Text style={this.props.leftArrowStyle}>{this.props.leftArrowText ? this.props.leftArrowText : 'Left'}</Text></TouchableOpacity>
-          <TouchableOpacity onPress={() => this.animateToPage(this._normalizePageNumber(currentPage + 1))} style={this.props.arrowStyle}><Text style={this.props.rightArrowStyle}>{this.props.rightArrowText ? this.props.rightArrowText : 'Right'}</Text></TouchableOpacity>
+          <TouchableOpacity
+            onPress={this._animatePreviousPage}
+            style={this.props.arrowStyle}
+          >
+            <Text style={this.props.leftArrowStyle}>
+              {this.props.leftArrowText ? this.props.leftArrowText : 'Left'}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={this._animateNextPage}
+            style={this.props.arrowStyle}
+          >
+            <Text style={this.props.rightArrowStyle}>
+              {this.props.rightArrowText ? this.props.rightArrowText : 'Right'}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
