@@ -258,14 +258,11 @@ export default class Carousel extends Component {
   }
 
   _placeCritical = (page) => {
-    const { childrenLength } = this.state;
-    const { width } = this.state.size;
+    const { childrenLength, size: { width } } = this.state;
     if (childrenLength === 1) {
       this._scrollTo({ offset: 0, animated: false });
     } else if (this.props.isLooped && page === 0) {
       this._scrollTo({ offset: childrenLength * width, animated: false });
-    } else if (page === 1) {
-      this._scrollTo({ offset: width, animated: false });
     } else {
       this._scrollTo({ offset: page * width, animated: false });
     }
