@@ -21,6 +21,7 @@ npm install react-native-looped-carousel --save
 
  - [Simple](https://snack.expo.io/@phil/carousel-simple-example)
  - [Modal](https://snack.expo.io/@phil/carousel-modal-example)
+ - [Arrows](https://snack.expo.io/@phil/carousel-arrow-example)
 
 ## Props
 
