@@ -341,14 +341,6 @@ export default class Carousel extends Component {
       currentPage = childrenLength;
     }
 
-    if (this.props.leftArrowText && this.props.leftArrowImage) {
-      console.warn("Props leftArrowImage and leftArrowText are both defined. leftArrowImage will be used.");
-    }
-
-    if (this.props.rightArrowText && this.props.rightArrowImage) {
-      console.warn("Props rightArrowImage and rightArrowText are both defined. rightArrowImage will be used.");
-    }
-
     return (
       <View style={styles.arrows} pointerEvents="box-none">
         <View style={[styles.arrowsContainer, this.props.arrowsContainerStyle]} pointerEvents="box-none">
@@ -356,13 +348,21 @@ export default class Carousel extends Component {
             onPress={this._animatePreviousPage}
             style={this.props.arrowStyle}
           >
-            {this.props.leftArrowImage ? this._renderLeftArrowImage() : this._renderLeftArrowText()}
+            {
+              this.props.leftArrowImage
+                ? this._renderLeftArrowImage()
+                : this._renderLeftArrowText()
+            }
           </TouchableOpacity>
           <TouchableOpacity
             onPress={this._animateNextPage}
             style={this.props.arrowStyle}
           >
-            {this.props.rightArrowImage ? this._renderRightArrowImage() : this._renderRightArrowText()}
+            {
+              this.props.rightArrowImage
+                ? this._renderRightArrowImage()
+                : this._renderRightArrowText()
+            }
           </TouchableOpacity>
         </View>
       </View>
@@ -382,11 +382,11 @@ export default class Carousel extends Component {
   )
 
   _renderLeftArrowImage = () => (
-    <Image source={this.props.leftArrowImage} style={this.props.arrowImageStyle}/>
+    <Image source={this.props.leftArrowImage} style={this.props.arrowImageStyle} />
   )
 
   _renderRightArrowImage = () => (
-    <Image source={this.props.rightArrowImage} style={this.props.arrowImageStyle}/>
+    <Image source={this.props.rightArrowImage} style={this.props.arrowImageStyle} />
   )
 
   render() {
