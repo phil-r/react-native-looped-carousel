@@ -169,7 +169,7 @@ export default class Carousel extends Component {
   _onScrollBegin = (event) => {
     this._clearTimer();
     const offset = { ...event.nativeEvent.contentOffset };
-    const page = this._calculateCurrentPage(offset.x);
+    const page = this._calculateNextPage(offset.x);
     if (this.props.onStartAnimateNextPage) {
       this.props.onStartAnimateNextPage(page);
     }
@@ -300,6 +300,19 @@ export default class Carousel extends Component {
   _calculateCurrentPage = (offset) => {
     const { width } = this.state.size;
     const page = Math.floor(offset / width);
+    return this._normalizePageNumber(page);
+  }
+
+  onScroll = (event) => {
+    const currentOffset = event.nativeEvent.contentOffset.y;
+    this.direction = currentOffset > this.offset ? 'right' : 'left';
+    this.offset = currentOffset;
+  }
+
+  _calculateNextPage = (offset) => {
+    const { width } = this.state.size;
+    const ratio = offset / width;
+    const page = this.direction === 'right' ? Math.ceil(ratio) : Math.round(ratio)
     return this._normalizePageNumber(page);
   }
 
