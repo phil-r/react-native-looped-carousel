@@ -303,7 +303,9 @@ export default class Carousel extends Component {
     const nextPage = this._calculateNextPage();
     if (this.nextPage !== nextPage) {
       this.nextPage = nextPage;
-      this.props.onPageBeingChanged(this.nextPage);
+      if (this.props.onPageBeingChanged) {
+        this.props.onPageBeingChanged(this.nextPage);
+      }
     }
   }
 
