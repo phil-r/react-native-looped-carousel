@@ -166,10 +166,12 @@ export default class Carousel extends Component {
     return this.state.currentPage;
   }
 
-  _onScrollBegin = () => {
+  _onScrollBegin = (event) => {
     this._clearTimer();
+    const offset = { ...event.nativeEvent.contentOffset };
+    const page = this._calculateCurrentPage(offset.x);
     if (this.props.onStartAnimateNextPage) {
-      this.props.onStartAnimateNextPage(this.getCurrentPage());
+      this.props.onStartAnimateNextPage(page);
     }
   }
 
