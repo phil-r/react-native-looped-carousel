@@ -303,7 +303,7 @@ export default class Carousel extends Component {
     return this._normalizePageNumber(page);
   }
 
-  onScroll = (event) => {
+  _onScroll = (event) => {
     const currentOffset = event.nativeEvent.contentOffset.y;
     this.direction = currentOffset > this.offset ? 'right' : 'left';
     this.offset = currentOffset;
@@ -399,6 +399,7 @@ export default class Carousel extends Component {
           ref={(c) => { this.scrollView = c; }}
           onScrollBeginDrag={this._onScrollBegin}
           onMomentumScrollEnd={this._onScrollEnd}
+          onScroll={this._onScroll}
           alwaysBounceHorizontal={false}
           alwaysBounceVertical={false}
           contentInset={{ top: 0 }}
