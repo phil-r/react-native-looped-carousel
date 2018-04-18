@@ -312,7 +312,7 @@ export default class Carousel extends Component {
   _calculateNextPage = () => {
     const { width } = this.state.size;
     const ratio = this.offset / width;
-    const page = this.direction === 'right' ? Math.ceil(ratio) : Math.round(ratio)
+    const page = this.direction === 'right' ? Math.ceil(ratio) : Math.floor(ratio);
     return this._normalizePageNumber(page);
   }
 
