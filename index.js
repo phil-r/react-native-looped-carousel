@@ -48,6 +48,8 @@ export default class Carousel extends Component {
     rightArrowText: PropTypes.string,
     chosenBulletStyle: Text.propTypes.style,
     onAnimateNextPage: PropTypes.func,
+    onStartAnimateNextPage: PropTypes.func,
+    onEndAnimateNextPage: PropTypes.func,
     swipe: PropTypes.bool,
     isLooped: PropTypes.bool,
   };
@@ -76,6 +78,8 @@ export default class Carousel extends Component {
     leftArrowText: '',
     rightArrowText: '',
     onAnimateNextPage: undefined,
+    onStartAnimateNextPage: undefined,
+    onEndAnimateNextPage: undefined,
     swipe: true,
     isLooped: true,
   };
@@ -164,6 +168,9 @@ export default class Carousel extends Component {
 
   _onScrollBegin = () => {
     this._clearTimer();
+    if (this.props.onStartAnimateNextPage) {
+      this.props.onStartAnimateNextPage(this.getCurrentPage());
+    }
   }
 
   _setCurrentPage = (currentPage) => {
@@ -181,6 +188,9 @@ export default class Carousel extends Component {
     this._placeCritical(page);
     this._setCurrentPage(page);
     this._setUpTimer();
+    if (this.props.onEndAnimateNextPage) {
+      this.props.onEndAnimateNextPage(this.getCurrentPage());
+    }
   }
 
   _onLayout = (event) => {
