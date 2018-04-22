@@ -42,18 +42,15 @@ export default class Carousel extends Component {
     arrows: PropTypes.bool,
     arrowsContainerStyle: Text.propTypes.style,
     arrowStyle: Text.propTypes.style,
-    bulletPosition: Text.propTypes.style,
-    leftArrowText: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.element,
-    ]),
-    rightArrowText: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.element,
-    ]),
+    bulletsStyle: Text.propTypes.style,
+    leftArrowStyle: Text.propTypes.style,
+    rightArrowStyle: Text.propTypes.style,
+    leftArrowText: PropTypes.string,
+    rightArrowText: PropTypes.string,
     chosenBulletStyle: Text.propTypes.style,
     onAnimateNextPage: PropTypes.func,
     swipe: PropTypes.bool,
+    isLooped: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -76,10 +73,13 @@ export default class Carousel extends Component {
     bulletStyle: undefined,
     arrowsContainerStyle: undefined,
     arrowStyle: undefined,
+    leftArrowStyle: undefined,
+    rightArrowStyle: undefined,
     leftArrowText: '',
     rightArrowText: '',
     onAnimateNextPage: undefined,
     swipe: true,
+    isLooped: true,
   };
 
   constructor(props) {
@@ -113,10 +113,12 @@ export default class Carousel extends Component {
   componentWillReceiveProps(nextProps) {
     if (!isEqual(this.props.children, nextProps.children)) {
       let childrenLength = 0;
-      this.setState({ currentPage: 0 });
       if (nextProps.children) {
         const length = React.Children.count(nextProps.children);
         childrenLength = length || 1;
+      }
+      if (this.state.currentPage >= childrenLength) {
+        this.setState({ currentPage: 0 });
       }
       this.setState({ childrenLength }, () => {
         this._setUpPages().then(() => this.setState({ contents: this.pages }));
@@ -138,8 +140,10 @@ export default class Carousel extends Component {
         }
         // We want to make infinite pages structure like this: 1-2-3-1-2
         // so we add first and second page again to the end
-        pages.push(children[0]);
-        pages.push(children[1]);
+        if (this.props.isLooped) {
+          pages.push(children[0]);
+          pages.push(children[1]);
+        }
       } else if (children) {
         pages.push(children[0]);
       } else {
@@ -181,12 +185,11 @@ export default class Carousel extends Component {
     this._setUpTimer();
   }
 
-  _onLayout = () => {
-    this.container.measure((x, y, w, h) => {
-      this.setState({ size: { width: w, height: h } });
-      // remove setTimeout wrapper when https://github.com/facebook/react-native/issues/6849 is resolved.
-      setTimeout(() => this._placeCritical(this.state.currentPage), 0);
-    });
+  _onLayout = (event) => {
+    const { height, width } = event.nativeEvent.layout;
+    this.setState({ size: { width, height } });
+    // remove setTimeout wrapper when https://github.com/facebook/react-native/issues/6849 is resolved.
+    setTimeout(() => this._placeCritical(this.state.currentPage), 0);
   }
 
   _clearTimer = () => {
@@ -214,20 +217,36 @@ export default class Carousel extends Component {
 
   _animateNextPage = () => {
     const { currentPage } = this.state;
-    this.animateToPage(this._normalizePageNumber(currentPage + 1));
+    const nextPage = this._normalizePageNumber(currentPage + 1);
+
+    // prevent from looping
+    if (!this.props.isLooped && nextPage < currentPage) {
+      return;
+    }
+    this.animateToPage(nextPage);
+  }
+
+  _animatePreviousPage = () => {
+    const { currentPage } = this.state;
+    const nextPage = this._normalizePageNumber(currentPage - 1);
+
+    // prevent from looping
+    if (!this.props.isLooped && nextPage > currentPage) {
+      return;
+    }
+    this.animateToPage(nextPage);
   }
 
   animateToPage = (page) => {
     let currentPage = page;
     this._clearTimer();
-    const { width } = this.state.size;
-    const { childrenLength } = this.state;
+    const { childrenLength, size: { width } } = this.state;
     if (currentPage >= childrenLength) {
-      currentPage = 0;
+      currentPage = this.props.isLooped ? 0 : childrenLength - 1;
     }
     if (currentPage === 0) {
       // animate properly based on direction
-      const scrollMultiplier = this.state.currentPage === 1 ? 1 : -1;
+      const scrollMultiplier = this.state.currentPage === 1 && childrenLength !== 2 ? 1 : -1;
       this._scrollTo({
         offset: (childrenLength + (1 * scrollMultiplier)) * width,
         animated: false,
@@ -246,14 +265,11 @@ export default class Carousel extends Component {
   }
 
   _placeCritical = (page) => {
-    const { childrenLength } = this.state;
-    const { width } = this.state.size;
+    const { childrenLength, size: { width } } = this.state;
     if (childrenLength === 1) {
       this._scrollTo({ offset: 0, animated: false });
-    } else if (page === 0) {
+    } else if (this.props.isLooped && page === 0) {
       this._scrollTo({ offset: childrenLength * width, animated: false });
-    } else if (page === 1) {
-      this._scrollTo({ offset: width, animated: false });
     } else {
       this._scrollTo({ offset: page * width, animated: false });
     }
@@ -263,8 +279,10 @@ export default class Carousel extends Component {
     const { childrenLength } = this.state;
     if (page === childrenLength) {
       return 0;
-    } else if (page >= childrenLength) {
+    } else if (page > childrenLength) {
       return 1;
+    } else if (page < 0) {
+      return childrenLength - 1;
     }
     return page;
   }
@@ -303,7 +321,7 @@ export default class Carousel extends Component {
         </TouchableWithoutFeedback>);
     }
     return (
-      <View style={[styles.bullets, this.props.bulletPosition]} pointerEvents="box-none">
+      <View style={[styles.bullets, this.props.bulletsStyle]} pointerEvents="box-none">
         <View style={[styles.bulletsContainer, this.props.bulletsContainerStyle]} pointerEvents="box-none">
           {bullets}
         </View>
@@ -320,8 +338,22 @@ export default class Carousel extends Component {
     return (
       <View style={styles.arrows} pointerEvents="box-none">
         <View style={[styles.arrowsContainer, this.props.arrowsContainerStyle]} pointerEvents="box-none">
-          <TouchableOpacity onPress={() => this.animateToPage(this._normalizePageNumber(currentPage - 1))} style={this.props.arrowStyle}><Text>{this.props.leftArrowText ? this.props.leftArrowText : 'Left'}</Text></TouchableOpacity>
-          <TouchableOpacity onPress={() => this.animateToPage(this._normalizePageNumber(currentPage + 1))} style={this.props.arrowStyle}><Text>{this.props.rightArrowText ? this.props.rightArrowText : 'Right'}</Text></TouchableOpacity>
+          <TouchableOpacity
+            onPress={this._animatePreviousPage}
+            style={this.props.arrowStyle}
+          >
+            <Text style={this.props.leftArrowStyle}>
+              {this.props.leftArrowText ? this.props.leftArrowText : 'Left'}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={this._animateNextPage}
+            style={this.props.arrowStyle}
+          >
+            <Text style={this.props.rightArrowStyle}>
+              {this.props.rightArrowText ? this.props.rightArrowText : 'Right'}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -331,7 +363,6 @@ export default class Carousel extends Component {
     const { contents } = this.state;
 
     const containerProps = {
-      ref: (c) => { this.container = c; },
       onLayout: this._onLayout,
       style: [this.props.style],
     };
@@ -358,7 +389,8 @@ export default class Carousel extends Component {
             styles.horizontalScroll,
             this.props.contentContainerStyle,
             {
-              width: size.width * (childrenLength + (childrenLength > 1 ? 2 : 0)),
+              width: size.width * (childrenLength +
+                (childrenLength > 1 && this.props.isLooped ? 2 : 0)),
               height: size.height,
             },
           ]}

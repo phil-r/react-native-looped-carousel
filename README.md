@@ -1,21 +1,28 @@
 # Looped carousel for React Native
 [![NPM version](http://img.shields.io/npm/v/react-native-looped-carousel.svg?style=flat)](https://www.npmjs.com/package/react-native-looped-carousel)
-[![Build Status](https://travis-ci.org/appintheair/react-native-looped-carousel.svg)](https://travis-ci.org/appintheair/react-native-looped-carousel)
-[![Dependency Status](https://david-dm.org/appintheair/react-native-looped-carousel.svg)](https://david-dm.org/appintheair/react-native-looped-carousel)
-[![devDependency Status](https://david-dm.org/appintheair/react-native-looped-carousel/dev-status.svg)](https://david-dm.org/appintheair/react-native-looped-carousel#info=devDependencies)
+[![Build Status](https://travis-ci.org/phil-r/react-native-looped-carousel.svg)](https://travis-ci.org/phil-r/react-native-looped-carousel)
+[![Dependency Status](https://david-dm.org/phil-r/react-native-looped-carousel.svg)](https://david-dm.org/phil-r/react-native-looped-carousel)
+[![devDependency Status](https://david-dm.org/phil-r/react-native-looped-carousel/dev-status.svg)](https://david-dm.org/phil-r/react-native-looped-carousel?type=dev)
 
 Full-fledged "infinite" carousel for your next [react-native](https://github.com/facebook/react-native/) project. Supports iOS and Android.
 
 Based on [react-native framework](https://github.com/facebook/react-native/) by Facebook.
 
 ## Demo
-![](http://spronin.github.io/img/react.gif)
+![demo gif](https://user-images.githubusercontent.com/577316/37863420-40c62c8c-2f5e-11e8-8eb4-23b8e7ea499e.gif)
 
 ## Install
 
 ```sh
 npm install react-native-looped-carousel --save
 ```
+
+## Examples
+
+ - [Simple](https://snack.expo.io/@phil/carousel-simple-example)
+ - [Modal](https://snack.expo.io/@phil/carousel-modal-example)
+ - [Arrows](https://snack.expo.io/@phil/carousel-arrow-example)
+ - [Dynamic content](https://snack.expo.io/@phil/carousel-dynamic-content-example)
 
 ## Props
 
@@ -28,6 +35,7 @@ pageStyle | style | null | style for pages
 contentContainerStyle | style | null | `contentContainerStyle` for the scrollView
 onAnimateNextPage | func | null | callback that is called with 0-based Id of the current page
 swipe | bool | true | motion control for Swipe
+isLooped | bool | true | if it's possible to scroll infinitely
 **Pagination** | --- | --- | ---
 pageInfo | boolean | false | shows `{currentPage} / {totalNumberOfPages}` pill at the bottom
 pageInfoBackgroundColor | string | 'rgba(0, 0, 0, 0.25)' | background color for pageInfo
@@ -38,15 +46,33 @@ pageInfoTextSeparator | string | ' / ' | separator for `{currentPage}` and `{tot
 bullets | bool | false | wether to show "bullets" at the bottom of the carousel
 bulletStyle | style | null | style for each bullet
 bulletsContainerStyle | style | null | style for the bullets container
-chosenBulletStyle | stlye | null | style for the selected bullet
+chosenBulletStyle | style | null | style for the selected bullet
 **Arrows** | --- | --- | ---
 arrows | bool | false | wether to show navigation arrows for the carousel
-arrowsStyle | style | null | style for navigation arrows
+arrowStyle | style | null | style for navigation arrows
+leftArrowStyle | style | null | style for left navigation arrow
+rightArrowStyle | style | null | style for right navigation arrow
 arrowsContainerStyle | style | null | style for the navigation arrows container
-leftArrowText | string / element | 'Left' | label / icon for left navigation arrow
-rightArrowText | string / element | 'Right' | label / icon for right navigation arrow
+leftArrowText | string | 'Left' | label for left navigation arrow
+rightArrowText | string | 'Right' | label for right navigation arrow
+
+## Change the page
+
+Three options :
+- Go to a specific page
+- Go to the next page
+- Go to the previous page
+
+```js
+// assuming ref is set up on the carousel as (ref) => this._carousel = ref
+onPress={() => {this._carousel.animateToPage(page)}}
+onPress={() => {this._carousel._animateNextPage()}}
+onPress={() => {this._carousel._animatePreviousPage()}}
+```
+
 
 ## Usage
+
 ```js
 import React, { Component } from 'react';
 import {
@@ -93,8 +119,6 @@ export default class CarouselExample extends Component {
 }
 ```
 
-[Full example code](Examples/Simple)
-
 ## Used in
  - [React Native Buyscreen](https://github.com/appintheair/react-native-buyscreen)
 
@@ -103,4 +127,4 @@ export default class CarouselExample extends Component {
 
 ----
 
-More on react-native here: http://facebook.github.io/react-native/docs/getting-started.html#content
+More on react-native here: https://facebook.github.io/react-native/docs/getting-started.html

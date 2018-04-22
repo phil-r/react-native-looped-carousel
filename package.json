@@ -1,6 +1,6 @@
 {
   "name": "react-native-looped-carousel",
-  "version": "0.1.7",
+  "version": "0.1.9",
   "description": "Looped carousel for React Native",
   "author": "Phil Rukin <philipp@rukin.me> (http://rukin.me)",
   "contributors": [
@@ -16,45 +16,40 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/appintheair/react-native-looped-carousel"
+    "url": "https://github.com/phil-r/react-native-looped-carousel"
   },
   "bugs": {
-    "url": "https://github.com/appintheair/react-native-looped-carousel/issues"
+    "url": "https://github.com/phil-r/react-native-looped-carousel/issues"
   },
   "keywords": [
     "react",
     "native",
-    "carousel",
-    "looped"
-  ],
-  "tags": [
-    "react",
-    "native",
+    "react-native",
     "carousel",
     "looped"
   ],
   "license": "MIT",
   "peerDependencies": {
-    "react": ">=15.3.1",
-    "react-native": ">=0.25.0"
+    "react": "^16.0.0",
+    "react-native": "^0.54.0"
   },
   "devDependencies": {
-    "babel-eslint": "^7.2.3",
-    "babel-jest": "^20.0.3",
-    "babel-preset-react-native": "^1.9.2",
-    "eslint": "^3.19.0",
+    "babel-eslint": "^8.2.2",
+    "babel-jest": "^22.4.3",
+    "babel-preset-react-native": "^4.0.0",
+    "eslint": "^4.19.1",
     "eslint-config-airbnb": "^15.0.1",
     "eslint-plugin-import": "^2.3.0",
     "eslint-plugin-jsx-a11y": "^5.0.3",
     "eslint-plugin-react": "^7.0.1",
-    "jest": "^20.0.4",
-    "react": "^15.5.4",
-    "react-native": "^0.42.0",
-    "react-test-renderer": "^15.5.4"
+    "jest": "^22.4.3",
+    "react": "^16.2.0",
+    "react-native": "^0.55.1",
+    "react-test-renderer": "^16.2.0"
   },
   "dependencies": {
     "lodash.isequal": "^4.5.0",
-    "prop-types": "^15.5.10"
+    "prop-types": "^15.6.1"
   },
   "jest": {
     "notify": true,

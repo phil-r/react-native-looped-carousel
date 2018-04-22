@@ -4,20 +4,11 @@ module.exports = {
     "es6": true
   },
 
-  "ecmaFeatures": {
-    "jsx": true
-  },
-
   "extends": "airbnb",
 
   "plugins": [
     "react"
   ],
-
-  "globals": {
-    // flow
-    "React$Element": false
-  },
 
   "rules": {
     // resets

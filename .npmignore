@@ -18,7 +18,6 @@ lto-llvm.*
 #node specific
 node_modules
 npm-debug.log
-
-Examples
+yarn-error.log
 
 __tests__
