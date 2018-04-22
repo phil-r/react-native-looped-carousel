@@ -64,7 +64,7 @@ export default class Carousel extends Component {
     currentPage: 0,
     style: undefined,
     pageStyle: undefined,
-    bulletPosition: undefined,
+    bulletsStyle: undefined,
     contentContainerStyle: undefined,
     pageInfoTextStyle: undefined,
     pageInfoBottomContainerStyle: undefined,
