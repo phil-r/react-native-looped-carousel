@@ -42,7 +42,6 @@ export default class Carousel extends Component {
     arrows: PropTypes.bool,
     arrowsContainerStyle: Text.propTypes.style,
     arrowStyle: Text.propTypes.style,
-    bulletsStyle: Text.propTypes.style,
     leftArrowStyle: Text.propTypes.style,
     rightArrowStyle: Text.propTypes.style,
     leftArrowText: PropTypes.string,
@@ -64,7 +63,6 @@ export default class Carousel extends Component {
     currentPage: 0,
     style: undefined,
     pageStyle: undefined,
-    bulletsStyle: undefined,
     contentContainerStyle: undefined,
     pageInfoTextStyle: undefined,
     pageInfoBottomContainerStyle: undefined,
@@ -321,10 +319,8 @@ export default class Carousel extends Component {
         </TouchableWithoutFeedback>);
     }
     return (
-      <View style={[styles.bullets, this.props.bulletsStyle]} pointerEvents="box-none">
-        <View style={[styles.bulletsContainer, this.props.bulletsContainerStyle]} pointerEvents="box-none">
-          {bullets}
-        </View>
+      <View style={[styles.bullets, this.props.bulletsContainerStyle]} pointerEvents="box-none">
+        {bullets}
       </View>
     );
   }
@@ -455,11 +451,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-  },
-  bulletsContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
   },
   chosenBullet: {
     margin: 10,
