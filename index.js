@@ -97,7 +97,6 @@ export default class Carousel extends Component {
       this.state = { size };
     }
     this.offset = 0;
-    this.direction = 'right';
     this.nextPage = 0;
   }
 
@@ -298,9 +297,9 @@ export default class Carousel extends Component {
 
   _onScroll = (event) => {
     const currentOffset = event.nativeEvent.contentOffset.x;
-    this.direction = currentOffset > this.offset ? 'right' : 'left';
+    const direction = currentOffset > this.offset ? 'right' : 'left';
     this.offset = currentOffset;
-    const nextPage = this._calculateNextPage();
+    const nextPage = this._calculateNextPage(direction);
     if (this.nextPage !== nextPage) {
       this.nextPage = nextPage;
       if (this.props.onPageBeingChanged) {
@@ -309,10 +308,10 @@ export default class Carousel extends Component {
     }
   }
 
-  _calculateNextPage = () => {
+  _calculateNextPage = (direction) => {
     const { width } = this.state.size;
     const ratio = this.offset / width;
-    const page = this.direction === 'right' ? Math.ceil(ratio) : Math.floor(ratio);
+    const page = direction === 'right' ? Math.ceil(ratio) : Math.floor(ratio);
     return this._normalizePageNumber(page);
   }
 
