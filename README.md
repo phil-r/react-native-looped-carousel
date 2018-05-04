@@ -1,6 +1,6 @@
 # Looped carousel for React Native
-[![NPM version](http://img.shields.io/npm/v/react-native-looped-carousel.svg?style=flat)](https://www.npmjs.com/package/react-native-looped-carousel)
-[![Build Status](https://travis-ci.org/phil-r/react-native-looped-carousel.svg)](https://travis-ci.org/phil-r/react-native-looped-carousel)
+[![NPM version](https://img.shields.io/npm/v/react-native-looped-carousel.svg)](https://www.npmjs.com/package/react-native-looped-carousel)
+[![Build Status](https://travis-ci.org/phil-r/react-native-looped-carousel.svg?branch=master)](https://travis-ci.org/phil-r/react-native-looped-carousel)
 [![Dependency Status](https://david-dm.org/phil-r/react-native-looped-carousel.svg)](https://david-dm.org/phil-r/react-native-looped-carousel)
 [![devDependency Status](https://david-dm.org/phil-r/react-native-looped-carousel/dev-status.svg)](https://david-dm.org/phil-r/react-native-looped-carousel?type=dev)
 
