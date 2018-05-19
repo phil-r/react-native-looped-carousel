@@ -34,6 +34,7 @@ currentPage | number | 0 | allows you to set initial page
 pageStyle | style | null | style for pages
 contentContainerStyle | style | null | `contentContainerStyle` for the scrollView
 onAnimateNextPage | func | null | callback that is called with 0-based Id of the current page
+onPageBeingChanged | func | null | callback that is called when scroll start with 0-based Id of the next page
 swipe | bool | true | motion control for Swipe
 isLooped | bool | true | if it's possible to scroll infinitely
 **Pagination** | --- | --- | ---

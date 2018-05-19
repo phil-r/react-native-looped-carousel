@@ -48,6 +48,7 @@ export default class Carousel extends Component {
     rightArrowText: PropTypes.string,
     chosenBulletStyle: Text.propTypes.style,
     onAnimateNextPage: PropTypes.func,
+    onPageBeingChanged: PropTypes.func,
     swipe: PropTypes.bool,
     isLooped: PropTypes.bool,
   };
@@ -76,6 +77,7 @@ export default class Carousel extends Component {
     leftArrowText: '',
     rightArrowText: '',
     onAnimateNextPage: undefined,
+    onPageBeingChanged: undefined,
     swipe: true,
     isLooped: true,
   };
@@ -94,6 +96,8 @@ export default class Carousel extends Component {
     } else {
       this.state = { size };
     }
+    this.offset = 0;
+    this.nextPage = 0;
   }
 
   componentDidMount() {
@@ -291,6 +295,26 @@ export default class Carousel extends Component {
     return this._normalizePageNumber(page);
   }
 
+  _onScroll = (event) => {
+    const currentOffset = event.nativeEvent.contentOffset.x;
+    const direction = currentOffset > this.offset ? 'right' : 'left';
+    this.offset = currentOffset;
+    const nextPage = this._calculateNextPage(direction);
+    if (this.nextPage !== nextPage) {
+      this.nextPage = nextPage;
+      if (this.props.onPageBeingChanged) {
+        this.props.onPageBeingChanged(this.nextPage);
+      }
+    }
+  }
+
+  _calculateNextPage = (direction) => {
+    const { width } = this.state.size;
+    const ratio = this.offset / width;
+    const page = direction === 'right' ? Math.ceil(ratio) : Math.floor(ratio);
+    return this._normalizePageNumber(page);
+  }
+
   _renderPageInfo = (pageLength) =>
     (<View style={[styles.pageInfoBottomContainer, this.props.pageInfoBottomContainerStyle]} pointerEvents="none">
       <View style={styles.pageInfoContainer}>
@@ -372,6 +396,7 @@ export default class Carousel extends Component {
           ref={(c) => { this.scrollView = c; }}
           onScrollBeginDrag={this._onScrollBegin}
           onMomentumScrollEnd={this._onScrollEnd}
+          onScroll={this._onScroll}
           alwaysBounceHorizontal={false}
           alwaysBounceVertical={false}
           contentInset={{ top: 0 }}
