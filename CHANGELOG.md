@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.12] - 2018-05-19
+### Added
+- `Animate to page` example
+
+### Changed
+- Lots of small fixes
+
 ## [0.1.11] - 2018-05-19
 ### Added
 - `onPageBeingChanged` event
