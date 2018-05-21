@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.1.12] - 2018-05-19
+## [0.1.12] - 2018-05-22
 ### Added
 - `Animate to page` example
 
