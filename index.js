@@ -104,70 +104,59 @@ export default class Carousel extends Component {
     if (this.state.childrenLength) {
       this._setUpTimer();
     }
-    // Set up pages but not content. Content will be set up via onLayout event.
-    this._setUpPages().then(() => this.setState({ contents: this.pages }));
   }
 
   componentWillUnmount() {
     this._clearTimer();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!isEqual(this.props.children, nextProps.children)) {
+  componentWillReceiveProps({ children }) {
+    if (!isEqual(this.props.children, children)) {
+      const { currentPage } = this.state;
+      this._clearTimer();
       let childrenLength = 0;
-      if (nextProps.children) {
-        const length = React.Children.count(nextProps.children);
-        childrenLength = length || 1;
+      if (children) {
+        childrenLength = React.Children.count(children) || 1;
       }
-      if (this.state.currentPage >= childrenLength) {
-        this.setState({ currentPage: 0 });
-      }
+      const nextPage = currentPage >= childrenLength ? childrenLength - 1 : currentPage;
       this.setState({ childrenLength }, () => {
-        this._setUpPages().then(() => this.setState({ contents: this.pages }));
+        this.animateToPage(nextPage);
+        this._setUpTimer();
       });
-      this._setUpTimer();
     }
   }
 
   _setUpPages() {
-    return new Promise(resolve => {
-      const { size } = this.state;
-      const children = React.Children.toArray(this.props.children);
-      const pages = [];
+    const { size } = this.state;
+    const { children: propsChildren, isLooped, pageStyle } = this.props;
+    const children = React.Children.toArray(propsChildren);
+    const pages = [];
 
-      if (children && children.length > 1) {
-        // add all pages
-        for (let i = 0; i < children.length; i += 1) {
-          pages.push(children[i]);
-        }
-        // We want to make infinite pages structure like this: 1-2-3-1-2
-        // so we add first and second page again to the end
-        if (this.props.isLooped) {
-          pages.push(children[0]);
-          pages.push(children[1]);
-        }
-      } else if (children) {
+    if (children && children.length > 1) {
+      // add all pages
+      pages.push(...children);
+      // We want to make infinite pages structure like this: 1-2-3-1-2
+      // so we add first and second page again to the end
+      if (isLooped) {
         pages.push(children[0]);
-      } else {
-        pages.push(<View><Text>
-            You are supposed to add children inside Carousel
-        </Text></View>);
+        pages.push(children[1]);
       }
-      this.pages = pages.map((page, i) => (
-        <TouchableWithoutFeedback style={[{ ...size }, this.props.pageStyle]} key={`page${i}`}>
-          {page}
-        </TouchableWithoutFeedback>
-      ));
-      resolve();
-    });
+    } else if (children) {
+      pages.push(children[0]);
+    } else {
+      pages.push(<View><Text>
+          You are supposed to add children inside Carousel
+      </Text></View>);
+    }
+    return pages.map((page, i) => (
+      <TouchableWithoutFeedback style={[{ ...size }, pageStyle]} key={`page${i}`}>
+        {page}
+      </TouchableWithoutFeedback>
+    ));
   }
 
   getCurrentPage() {
     return this.state.currentPage;
-  }
-
-  _onScrollBegin = () => {
-    this._clearTimer();
   }
 
   _setCurrentPage = (currentPage) => {
@@ -179,12 +168,29 @@ export default class Carousel extends Component {
     });
   }
 
+  _onScrollBegin = () => {
+    this._clearTimer();
+  }
+
   _onScrollEnd = (event) => {
     const offset = { ...event.nativeEvent.contentOffset };
     const page = this._calculateCurrentPage(offset.x);
     this._placeCritical(page);
     this._setCurrentPage(page);
     this._setUpTimer();
+  }
+
+  _onScroll = (event) => {
+    const currentOffset = event.nativeEvent.contentOffset.x;
+    const direction = currentOffset > this.offset ? 'right' : 'left';
+    this.offset = currentOffset;
+    const nextPage = this._calculateNextPage(direction);
+    if (this.nextPage !== nextPage) {
+      this.nextPage = nextPage;
+      if (this.props.onPageBeingChanged) {
+        this.props.onPageBeingChanged(this.nextPage);
+      }
+    }
   }
 
   _onLayout = (event) => {
@@ -240,45 +246,61 @@ export default class Carousel extends Component {
   }
 
   animateToPage = (page) => {
-    let currentPage = page;
+    const { currentPage, childrenLength, size: { width } } = this.state;
+    const { isLooped } = this.props;
+    const nextPage = this._normalizePageNumber(page);
     this._clearTimer();
-    const { childrenLength, size: { width } } = this.state;
-    if (currentPage >= childrenLength) {
-      currentPage = this.props.isLooped ? 0 : childrenLength - 1;
-    }
-    if (currentPage === 0) {
-      // animate properly based on direction
-      const scrollMultiplier = this.state.currentPage === 1 && childrenLength !== 2 ? 1 : -1;
-      this._scrollTo({
-        offset: (childrenLength + (1 * scrollMultiplier)) * width,
-        animated: false,
-        nofix: true,
-      });
-      this._scrollTo({ offset: childrenLength * width, animated: true });
-    } else if (currentPage === 1) {
-      const scrollMultiplier = this.state.currentPage === 0 ? 0 : 2;
-      this._scrollTo({ offset: width * scrollMultiplier, animated: false, nofix: true });
+    if (nextPage === currentPage) {
+      // pass
+    } else if (nextPage === 0) {
+      if (isLooped) {
+        // animate properly based on direction
+        if (currentPage !== childrenLength - 1) {
+          this._scrollTo({
+            offset: (childrenLength + 2) * width,
+            animated: false,
+            nofix: true,
+          });
+        }
+        this._scrollTo({ offset: childrenLength * width, animated: true });
+      } else {
+        this._scrollTo({ offset: 0, animated: true });
+      }
+    } else if (nextPage === 1) {
+      // To properly animate from the first page we need to move view
+      // to its original position first (not needed if not looped)
+      if (currentPage === 0 && isLooped) {
+        this._scrollTo({ offset: 0, animated: false, nofix: true });
+      }
       this._scrollTo({ offset: width, animated: true });
     } else {
-      this._scrollTo({ offset: currentPage * width, animated: true });
+      // Last page is allowed to jump to the first through the "border"
+      if (currentPage === 0 && nextPage !== childrenLength - 1) {
+        this._scrollTo({ offset: 0, animated: false, nofix: true });
+      }
+      this._scrollTo({ offset: nextPage * width, animated: true });
     }
-    this._setCurrentPage(currentPage);
+    this._setCurrentPage(nextPage);
     this._setUpTimer();
   }
 
   _placeCritical = (page) => {
-    const { childrenLength, size: { width } } = this.state;
-    if (childrenLength === 1) {
-      this._scrollTo({ offset: 0, animated: false });
-    } else if (this.props.isLooped && page === 0) {
-      this._scrollTo({ offset: childrenLength * width, animated: false });
-    } else {
-      this._scrollTo({ offset: page * width, animated: false });
+    const { isLooped } = this.props;
+    if (isLooped) {
+      const { childrenLength, size: { width } } = this.state;
+      if (childrenLength === 1) {
+        this._scrollTo({ offset: 0, animated: false });
+      } else if (page === 0) {
+        this._scrollTo({ offset: childrenLength * width, animated: false });
+      } else {
+        this._scrollTo({ offset: page * width, animated: false });
+      }
     }
   }
 
   _normalizePageNumber = (page) => {
     const { childrenLength } = this.state;
+
     if (page === childrenLength) {
       return 0;
     } else if (page > childrenLength) {
@@ -291,21 +313,8 @@ export default class Carousel extends Component {
 
   _calculateCurrentPage = (offset) => {
     const { width } = this.state.size;
-    const page = Math.floor(offset / width);
+    const page = Math.round(offset / width);
     return this._normalizePageNumber(page);
-  }
-
-  _onScroll = (event) => {
-    const currentOffset = event.nativeEvent.contentOffset.x;
-    const direction = currentOffset > this.offset ? 'right' : 'left';
-    this.offset = currentOffset;
-    const nextPage = this._calculateNextPage(direction);
-    if (this.nextPage !== nextPage) {
-      this.nextPage = nextPage;
-      if (this.props.onPageBeingChanged) {
-        this.props.onPageBeingChanged(this.nextPage);
-      }
-    }
   }
 
   _calculateNextPage = (direction) => {
@@ -380,15 +389,14 @@ export default class Carousel extends Component {
   }
 
   render() {
-    const { contents } = this.state;
+    const contents = this._setUpPages();
 
     const containerProps = {
       onLayout: this._onLayout,
       style: [this.props.style],
     };
 
-    const { size } = this.state;
-    const childrenLength = React.Children.count(this.props.children);
+    const { size, childrenLength } = this.state;
 
     return (
       <View {...containerProps}>
