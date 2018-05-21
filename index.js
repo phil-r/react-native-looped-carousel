@@ -240,29 +240,31 @@ export default class Carousel extends Component {
   }
 
   animateToPage = (page) => {
-    let currentPage = page;
+    const { currentPage, childrenLength, size: { width } } = this.state;
+    let nextPage = this._normalizePageNumber(page);
     this._clearTimer();
-    const { childrenLength, size: { width } } = this.state;
-    if (currentPage >= childrenLength) {
-      currentPage = this.props.isLooped ? 0 : childrenLength - 1;
+    if (nextPage >= childrenLength) {
+      nextPage = this.props.isLooped ? 0 : childrenLength - 1;
     }
-    if (currentPage === 0) {
+    if (nextPage === currentPage) {
+      // pass
+    } else if (nextPage === 0) {
       // animate properly based on direction
-      const scrollMultiplier = this.state.currentPage === 1 && childrenLength !== 2 ? 1 : -1;
+      const scrollMultiplier = currentPage === 1 && childrenLength !== 2 ? 1 : -1;
       this._scrollTo({
         offset: (childrenLength + (1 * scrollMultiplier)) * width,
         animated: false,
         nofix: true,
       });
       this._scrollTo({ offset: childrenLength * width, animated: true });
-    } else if (currentPage === 1) {
-      const scrollMultiplier = this.state.currentPage === 0 ? 0 : 2;
+    } else if (nextPage === 1) {
+      const scrollMultiplier = currentPage === 0 ? 0 : 2;
       this._scrollTo({ offset: width * scrollMultiplier, animated: false, nofix: true });
       this._scrollTo({ offset: width, animated: true });
     } else {
-      this._scrollTo({ offset: currentPage * width, animated: true });
+      this._scrollTo({ offset: nextPage * width, animated: true });
     }
-    this._setCurrentPage(currentPage);
+    this._setCurrentPage(nextPage);
     this._setUpTimer();
   }
 
