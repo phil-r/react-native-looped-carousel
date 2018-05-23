@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.1.13] - 2018-05-23
+### Fixed
+- `currentPage` not working when `isLooped` set to `false`
+
 ## [0.1.12] - 2018-05-22
 ### Added
 - `Animate to page` example
