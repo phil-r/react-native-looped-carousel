@@ -286,16 +286,19 @@ export default class Carousel extends Component {
 
   _placeCritical = (page) => {
     const { isLooped } = this.props;
-    if (isLooped) {
-      const { childrenLength, size: { width } } = this.state;
-      if (childrenLength === 1) {
-        this._scrollTo({ offset: 0, animated: false });
-      } else if (page === 0) {
-        this._scrollTo({ offset: childrenLength * width, animated: false });
+    const { childrenLength, size: { width } } = this.state;
+    let offset = 0;
+    // if page number is bigger then length - something is incorrect
+    if (page < childrenLength) {
+      if (page === 0 && isLooped) {
+        // in "looped" scenario first page shold be placed after the last one
+        offset = childrenLength * width;
       } else {
-        this._scrollTo({ offset: page * width, animated: false });
+        offset = page * width;
       }
     }
+
+    this._scrollTo({ offset, animated: false });
   }
 
   _normalizePageNumber = (page) => {
