@@ -46,6 +46,8 @@ export default class Carousel extends Component {
     rightArrowStyle: Text.propTypes.style,
     leftArrowText: PropTypes.string,
     rightArrowText: PropTypes.string,
+    renderLeftArrow: PropTypes.func,
+    renderRightArrow: PropTypes.func,
     chosenBulletStyle: Text.propTypes.style,
     onAnimateNextPage: PropTypes.func,
     onPageBeingChanged: PropTypes.func,
@@ -76,6 +78,8 @@ export default class Carousel extends Component {
     rightArrowStyle: undefined,
     leftArrowText: '',
     rightArrowText: '',
+    renderLeftArrow: undefined,
+    renderRightArrow: undefined,
     onAnimateNextPage: undefined,
     onPageBeingChanged: undefined,
     swipe: true,
@@ -145,7 +149,7 @@ export default class Carousel extends Component {
       pages.push(children[0]);
     } else {
       pages.push(<View><Text>
-          You are supposed to add children inside Carousel
+        You are supposed to add children inside Carousel
       </Text></View>);
     }
     return pages.map((page, i) => (
@@ -361,6 +365,26 @@ export default class Carousel extends Component {
     );
   }
 
+  _renderLeftArrow = () => {
+    if (this.props.renderLeftArrow) {
+      return this.props.renderLeftArrow()
+    }
+
+    return <Text style={this.props.leftArrowStyle}>
+      {this.props.leftArrowText ? this.props.leftArrowText : 'Left'}
+    </Text>
+  }
+
+  _renderRightArrow = () => {
+    if (this.props.renderRightArrow) {
+      return this.props.renderRightArrow()
+    }
+
+    return <Text style={this.props.rightArrowStyle}>
+      {this.props.rightArrowText ? this.props.rightArrowText : 'Right'}
+    </Text>
+  }
+
   _renderArrows = () => {
     let { currentPage } = this.state;
     const { childrenLength } = this.state;
@@ -374,17 +398,13 @@ export default class Carousel extends Component {
             onPress={this._animatePreviousPage}
             style={this.props.arrowStyle}
           >
-            <Text style={this.props.leftArrowStyle}>
-              {this.props.leftArrowText ? this.props.leftArrowText : 'Left'}
-            </Text>
+            {this._renderLeftArrow()}
           </TouchableOpacity>
           <TouchableOpacity
             onPress={this._animateNextPage}
             style={this.props.arrowStyle}
           >
-            <Text style={this.props.rightArrowStyle}>
-              {this.props.rightArrowText ? this.props.rightArrowText : 'Right'}
-            </Text>
+            {this._renderRightArrow()}
           </TouchableOpacity>
         </View>
       </View>

@@ -57,6 +57,8 @@ rightArrowStyle | style | null | style for right navigation arrow
 arrowsContainerStyle | style | null | style for the navigation arrows container
 leftArrowText | string | 'Left' | label for left navigation arrow
 rightArrowText | string | 'Right' | label for right navigation arrow
+renderRightArrow | func | null | renders custom right arrow
+renderLeftArrow | func | null | renders custom left arrow
 
 ## Change the page
 
