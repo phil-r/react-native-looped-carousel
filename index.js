@@ -51,6 +51,7 @@ export default class Carousel extends Component {
     onPageBeingChanged: PropTypes.func,
     swipe: PropTypes.bool,
     isLooped: PropTypes.bool,
+    keyboardShouldPersistTaps: PropTypes.string,
   };
 
   static defaultProps = {
@@ -80,6 +81,7 @@ export default class Carousel extends Component {
     onPageBeingChanged: undefined,
     swipe: true,
     isLooped: true,
+    keyboardShouldPersistTaps: 'never',
   };
 
   constructor(props) {
@@ -400,6 +402,7 @@ export default class Carousel extends Component {
     };
 
     const { size, childrenLength } = this.state;
+    const { keyboardShouldPersistTaps } = this.props;
 
     return (
       <View {...containerProps}>
@@ -426,6 +429,7 @@ export default class Carousel extends Component {
               height: size.height,
             },
           ]}
+          keyboardShouldPersistTaps={keyboardShouldPersistTaps}
         >
           {contents}
         </ScrollView>
