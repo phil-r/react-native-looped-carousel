@@ -44,7 +44,7 @@
     "eslint-plugin-react": "^7.0.1",
     "jest": "^23.0.0",
     "react": "^16.2.0",
-    "react-native": "^0.55.1",
+    "react-native": "^0.58.5",
     "react-test-renderer": "^16.2.0"
   },
   "dependencies": {
