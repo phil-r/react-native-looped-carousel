@@ -212,14 +212,9 @@ export default class Carousel extends Component {
     }
   }
 
-  _scrollTo = ({ offset, animated, nofix }) => {
+  _scrollTo = ({ offset, animated }) => {
     if (this.scrollView) {
       this.scrollView.scrollTo({ y: 0, x: offset, animated });
-
-      // Fix bug #50
-      if (!nofix && Platform.OS === 'android' && !animated) {
-        this.scrollView.scrollTo({ y: 0, x: offset, animated: true });
-      }
     }
   }
 
@@ -258,8 +253,7 @@ export default class Carousel extends Component {
         if (currentPage !== childrenLength - 1) {
           this._scrollTo({
             offset: (childrenLength + 2) * width,
-            animated: false,
-            nofix: true,
+            animated: false
           });
         }
         this._scrollTo({ offset: childrenLength * width, animated: true });
@@ -270,13 +264,13 @@ export default class Carousel extends Component {
       // To properly animate from the first page we need to move view
       // to its original position first (not needed if not looped)
       if (currentPage === 0 && isLooped) {
-        this._scrollTo({ offset: 0, animated: false, nofix: true });
+        this._scrollTo({ offset: 0, animated: false });
       }
       this._scrollTo({ offset: width, animated: true });
     } else {
       // Last page is allowed to jump to the first through the "border"
       if (currentPage === 0 && nextPage !== childrenLength - 1) {
-        this._scrollTo({ offset: 0, animated: false, nofix: true });
+        this._scrollTo({ offset: 0, animated: false });
       }
       this._scrollTo({ offset: nextPage * width, animated: true });
     }
@@ -405,6 +399,7 @@ export default class Carousel extends Component {
       <View {...containerProps}>
         <ScrollView
           ref={(c) => { this.scrollView = c; }}
+          scrollEventThrottle={16}
           onScrollBeginDrag={this._onScrollBegin}
           onMomentumScrollEnd={this._onScrollEnd}
           onScroll={this._onScroll}
