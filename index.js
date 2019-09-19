@@ -408,6 +408,7 @@ export default class Carousel extends Component {
           onScrollBeginDrag={this._onScrollBegin}
           onMomentumScrollEnd={this._onScrollEnd}
           onScroll={this._onScroll}
+          scrollEventThrottle={16}
           alwaysBounceHorizontal={false}
           alwaysBounceVertical={false}
           contentInset={{ top: 0 }}
