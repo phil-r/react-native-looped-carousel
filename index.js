@@ -110,7 +110,7 @@ export default class Carousel extends Component {
     this._clearTimer();
   }
 
-  componentWillReceiveProps({ children }) {
+  componentDidUpdate({ children }) {
     if (!isEqual(this.props.children, children)) {
       const { currentPage } = this.state;
       this._clearTimer();
@@ -145,7 +145,7 @@ export default class Carousel extends Component {
       pages.push(children[0]);
     } else {
       pages.push(<View><Text>
-          You are supposed to add children inside Carousel
+        You are supposed to add children inside Carousel
       </Text></View>);
     }
     return pages.map((page, i) => (
@@ -408,6 +408,7 @@ export default class Carousel extends Component {
           onScrollBeginDrag={this._onScrollBegin}
           onMomentumScrollEnd={this._onScrollEnd}
           onScroll={this._onScroll}
+          scrollEventThrottle={20}
           alwaysBounceHorizontal={false}
           alwaysBounceVertical={false}
           contentInset={{ top: 0 }}
