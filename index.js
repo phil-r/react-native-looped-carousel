@@ -23,7 +23,7 @@ const viewPropTypes = ViewPropTypes || View.propTypes;
  * (loop possible if children count > 1)
 */
 export default class Carousel extends Component {
-  static propTypes = {
+  static propTypes = viewPropTypes ? {
     children: PropTypes.node.isRequired,
     autoplay: PropTypes.bool,
     delay: PropTypes.number,
@@ -51,7 +51,7 @@ export default class Carousel extends Component {
     onPageBeingChanged: PropTypes.func,
     swipe: PropTypes.bool,
     isLooped: PropTypes.bool,
-  };
+  } : {};
 
   static defaultProps = {
     delay: PAGE_CHANGE_DELAY,
