@@ -8,6 +8,7 @@ import {
   View,
   ViewPropTypes,
   TouchableWithoutFeedback,
+  I18nManager
 } from 'react-native';
 import PropTypes from 'prop-types';
 import isEqual from 'lodash.isequal';
@@ -278,7 +279,9 @@ export default class Carousel extends Component {
       if (currentPage === 0 && nextPage !== childrenLength - 1) {
         this._scrollTo({ offset: 0, animated: false, nofix: true });
       }
-      this._scrollTo({ offset: nextPage * width, animated: true });
+      let offset = nextPage * width;
+      I18nManager.isRTL && (offset = -offset);
+      this._scrollTo({ offset, animated: true });
     }
     this._setCurrentPage(nextPage);
     this._setUpTimer();
