@@ -25,6 +25,7 @@ export default class Carousel extends Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
     autoplay: PropTypes.bool,
+    reverseDirection: PropTypes.bool,
     delay: PropTypes.number,
     currentPage: PropTypes.number,
     style: viewPropTypes.style,
@@ -58,6 +59,7 @@ export default class Carousel extends Component {
     pageInfo: false,
     bullets: false,
     arrows: false,
+    reverseDirection: false,
     pageInfoBackgroundColor: "rgba(0, 0, 0, 0.25)",
     pageInfoTextSeparator: " / ",
     currentPage: 0,
@@ -367,20 +369,37 @@ export default class Carousel extends Component {
   _renderBullets = (pageLength) => {
     const bullets = [];
     for (let i = 0; i < pageLength; i += 1) {
-      bullets.unshift(
-        <TouchableWithoutFeedback
-          onPress={() => this.animateToPage(i)}
-          key={`bullet${i}`}
-        >
-          <View
-            style={
-              i === this.state.currentPage
-                ? [styles.chosenBullet, this.props.chosenBulletStyle]
-                : [styles.bullet, this.props.bulletStyle]
-            }
-          />
-        </TouchableWithoutFeedback>
-      );
+      if (this.props.reverseDirection) {
+        bullets.unshift(
+          <TouchableWithoutFeedback
+            onPress={() => this.animateToPage(i)}
+            key={`bullet${i}`}
+          >
+            <View
+              style={
+                i === this.state.currentPage
+                  ? [styles.chosenBullet, this.props.chosenBulletStyle]
+                  : [styles.bullet, this.props.bulletStyle]
+              }
+            />
+          </TouchableWithoutFeedback>
+        );
+      } else {
+        bullets.push(
+          <TouchableWithoutFeedback
+            onPress={() => this.animateToPage(i)}
+            key={`bullet${i}`}
+          >
+            <View
+              style={
+                i === this.state.currentPage
+                  ? [styles.chosenBullet, this.props.chosenBulletStyle]
+                  : [styles.bullet, this.props.bulletStyle]
+              }
+            />
+          </TouchableWithoutFeedback>
+        );
+      }
     }
     return (
       <View
