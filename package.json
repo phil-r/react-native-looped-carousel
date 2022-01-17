@@ -1,14 +1,8 @@
 {
-  "name": "react-native-looped-carousel",
+  "name": "react-native-looped-carousel-inverted",
   "version": "0.1.13",
   "description": "Looped carousel for React Native",
-  "author": "Phil Rukin <philipp@rukin.me> (http://rukin.me)",
-  "contributors": [
-    {
-      "name": "Sergey Pronin",
-      "email": "sergey@pronin.me"
-    }
-  ],
+  "author": "parthur259@gmail.com",
   "main": "index.js",
   "scripts": {
     "test": "jest --verbose",
