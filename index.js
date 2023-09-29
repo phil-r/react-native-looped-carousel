@@ -110,7 +110,8 @@ export default class Carousel extends Component {
     this._clearTimer();
   }
 
-  componentWillReceiveProps({ children }) {
+  // eslint-disable-next-line no-console
+  UNSAFE_componentWillReceiveProps({ children }) {
     if (!isEqual(this.props.children, children)) {
       const { currentPage } = this.state;
       this._clearTimer();
@@ -408,6 +409,7 @@ export default class Carousel extends Component {
           onScrollBeginDrag={this._onScrollBegin}
           onMomentumScrollEnd={this._onScrollEnd}
           onScroll={this._onScroll}
+          scrollEventThrottle={16}
           alwaysBounceHorizontal={false}
           alwaysBounceVertical={false}
           contentInset={{ top: 0 }}
